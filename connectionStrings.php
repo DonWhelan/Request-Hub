@@ -273,6 +273,85 @@
         return $queryresult;
     }
     
+    
+    function select_prepared_userLogin($valueToFind) {
+        // ref : https://www.w3schools.com/php/php_mysql_prepared_statements.asp
+        $connection = selectConnectionString();
+        /* check connection */
+        if (mysqli_connect_errno($connection)) {
+            printf("Connect failed: %s\n", mysqli_connect_error());
+            exit();
+        }
+        $usernameToFind = $valueToFind;
+        /*
+         * We have created a view of the users table called userLogonView. It only has access to username and password colums,
+         * if details of the query were exploited only u-name and p-word would be exposed and no other personal information.
+         */  
+        /* create a prepared statement */
+        if ($stmt = mysqli_prepare($connection, "SELECT username, password, salt FROM userLogonView WHERE username = ? LIMIT 1")) {
+            /* bind parameters for markers */
+            mysqli_stmt_bind_param($stmt, "s", $usernameToFind);
+            /* execute query */
+            mysqli_stmt_execute($stmt);
+            /* bind result variables */
+            mysqli_stmt_bind_result($stmt, $resultUsername, $resultPassword, $resultSalt);
+            // /* fetch value */
+            $array = [];
+            //$result = mysqli_stmt_fetch($stmt);
+            while (mysqli_stmt_fetch($stmt)) {
+                $array = ["username" => $resultUsername, "password" => $resultPassword, "salt" => $resultSalt, "numRows" => ""];
+            }
+            //var_dump($array);
+            $numrows = $stmt->num_rows;
+            $array["numRows"] = $numrows;
+            return $array;
+            /* close statement */
+            mysqli_stmt_close($stmt);
+        }
+        
+        /* close connection */
+        mysqli_close($connection);
+    
+    }
+    
+    function select_prepared_userLogin_transaction($valueToFind) {
+        $connection = selectConnectionString();
+        /* check connection */
+        if (mysqli_connect_errno($connection)) {
+            printf("Connect failed: %s\n", mysqli_connect_error());
+            exit();
+        }
+        // alows transactions
+        mysqli_autocommit($connection,FALSE);
+        // starts transaction
+        mysqli_query($connection,"start transaction");
+        $usernameToFind = $valueToFind;
+        /*
+         * We have created a view of the users table called userLogonView. It only has access to username and password colums,
+         * if details of the query were exploited only u-name and p-word would be exposed and no other personal information.
+         */  
+        if ($stmt = mysqli_prepare($connection, "SELECT username, password, salt FROM userLogonView WHERE username = ? LIMIT 1")) {
+            mysqli_stmt_bind_param($stmt, "s", $usernameToFind);
+            mysqli_stmt_execute($stmt);
+            mysqli_stmt_bind_result($stmt, $resultUsername, $resultPassword, $resultSalt);
+            $array = [];
+            while (mysqli_stmt_fetch($stmt)) {
+                $array = ["username" => $resultUsername, "password" => $resultPassword, "salt" => $resultSalt, "numRows" => ""];
+            }
+            $numrows = $stmt->num_rows;
+            $array["numRows"] = $numrows;
+            if($numrows > 1){
+                mysqli_query($connection,"rollback");
+            }else{
+                mysqli_query($connection,"commit");
+            }
+            return $array;
+            mysqli_stmt_close($stmt);
+        }
+        mysqli_close($connection);
+    
+    }
+    
     /*  - insert_sqli Functions - 
      *  insert_sqli(), insert_sqliLog() and insert_sqliTransaction() all use insertConnectionString() which has SELECT,INSERT and LOCK only access to the DB
      *  each one takes in a SQL query as a argument and handles faild connections to the db server and the database its self
@@ -528,26 +607,25 @@
             exit();
         }
         
-        //$valueToFind = 101;
-        
         /* create a prepared statement */
-        if ($stmt = mysqli_prepare($connection, "SELECT * FROM testtable where value=?")) {
+        if ($stmt = mysqli_prepare($connection, "SELECT username FROM users where username = ? ")) {
       
             /* bind parameters for markers */
-            mysqli_stmt_bind_param($stmt, "i", $valueToFind);
+            mysqli_stmt_bind_param($stmt, $valueToFind);
         
             /* execute query */
             mysqli_stmt_execute($stmt);
             /* bind result variables */
-            mysqli_stmt_bind_result($stmt, $key, $value);
+            mysqli_stmt_bind_result($stmt,  $value);
         
             /* fetch value */
-            mysqli_stmt_fetch($stmt);
-        
-            echo "key: " . $key . " - value: " . $value;
+            while(mysqli_stmt_fetch($stmt)){
+                echo $value;
+            }
         
             /* close statement */
             mysqli_stmt_close($stmt);
+            //return $value;
         }
         
         /* close connection */
@@ -555,32 +633,6 @@
     }
     
     //select_prepared(102);
-    
-    
-    /*  - ESCAPE_DATA() - 
-     *  escape_data function strips text that is being sent to the DB of harmful tags and characters
-     *  mysqli_real_escape_string() is a more secure method of scrubbing data so we check if it is available, as it rely's on a connection to the DB
-     *  If available we trim() to remove whitespace, then put pass through the mysql_real_escape_string() to address the threat of SQL injection.
-     *  The data is then run through strip_tags() to remove HTML tags like "<script>" to address XSS attacks.
-     *  If mysqli_real_escape_string() in unavailable we do the same steps but using mysql_escape_string().
-     *  This function should be used for all text sent to the DB or files on the web/file directory!
-     *  
-     *  Referances:
-     *  http://www.newthinktank.com/2011/01/php-security/
-     */
-     
-
-    
-    function escape_data2($unscrubbedData) {
-        if (function_exists('mysql_real_escape_string')) {
-            $real_escape_stringCleaned = mysql_real_escape_string (trim($unscrubbedData));
-            $cleanData = strip_tags($real_escape_stringCleaned);
-        } else {
-            $real_escape_stringCleaned = mysql_escape_string (trim($unscrubbedData));
-            $cleanData = strip_tags($real_escape_stringCleaned);
-        }
-        return $cleanData;
-    }
 
     
    

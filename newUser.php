@@ -90,16 +90,6 @@
         exit();
     }
     
-    /*
-     * password_hash() was picked over MD5 as its outdated and unsecure and SHA1 as it dosnt provide the cost functinality that password_hash() does which will defend against brute force attacks
-     * password_hash() returns the algorithm, cost and salt as part of the returned hash. Therefore, 
-     * all information that's needed to verify the hash is included in it. 
-     * This allows the verify function to verify the hash without needing separate storage for the salt or algorithm information.
-     * password_hash() also allows us to use Blowfish encryption
-     */
-     
-    $userpasswordhashed = password_hash($password , CRYPT_BLOWFISH,['cost' => 8]);
-    
     /* 
      * Only if the details pass the reggular expressions, $passedRegex remains TRUE and the connection to the DB is run,
      * the sanitised info is then sent to the SQL server
@@ -111,7 +101,8 @@
          */
         $arr[] = "";
         // select_sqliLog_max1_Rnum returns a sql result object and num of rows affected from the query
-        $arr = select_sqliLog_max1_Rnum("SELECT username FROM userUsernameView WHERE username = '$username'",1);   
+        // userUsernameView is a view of users that only shows username
+        $arr = select_sqliLog_max1_Rnum("SELECT username FROM userUsernameView WHERE username = '$username' LIMIT 1",1);   
         
         /*
          * mysqli_query() was chosen over the other connection functions as it only allows one query to be sent to the DB
@@ -172,9 +163,26 @@
         
         if($UserNameFree){
             
+            /*
+             * password_hash() was picked over MD5 as its outdated and unsecure and SHA1 as it dosnt provide the cost functinality that password_hash() does which will defend against brute force attacks
+             * password_hash() returns the algorithm, cost and salt as part of the returned hash. Therefore, 
+             * all information that's needed to verify the hash is included in it. 
+             * This allows the verify function to verify the hash without needing separate storage for the salt or algorithm information.
+             * password_hash() also allows us to use Blowfish encryption
+             */
+            
+            // brings in pepper which is a defined variable outside the web root
+            include("../pem/pepper.php");
+            // salt generated
+            $salt = bin2hex(random_bytes(25));
+            // adds peper and salt to the password
+            $password_withSaltAndPepper = pepper.$password.$salt;
+             
+            $userpasswordhashed = password_hash($password_withSaltAndPepper , CRYPT_BLOWFISH,['cost' => 8]);
+            
             //we then log the user details to the DB
             //echo "hello friends";
-            insert_sqli("INSERT INTO users (username, password, email) VALUES ('$username','$userpasswordhashed','$email')");
+            insert_sqli("INSERT INTO users (username, password, email, salt) VALUES ('$username','$userpasswordhashed','$email','$salt')");
             
             $_SESSION['user'] = $dbUsername;
             // adds the users IP address to the session, this will be used for validation at different stages to stop session hijacking - get_client_ip_env() included from includes/connect.php
@@ -187,7 +195,7 @@
             $_SESSION['cookieId'] = $randomID;
             //cookies expires within a hour, has a specified path, specifieddomain, are secure flagged, and has HTTP Only flagged
             setcookie('cookieId', $randomID, time()+3600, "/", "request-hub.com", 1, 1);
-            
+            echo "new user created";
             //user then directed to their new profile
             //header("Location: ../profiles/".$username.".php");
         }

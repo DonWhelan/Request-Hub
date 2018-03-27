@@ -56,5 +56,10 @@
     //
     // ------ delete_sqliTransaction()  
     // delete_sqliTransactio("DELETE FROM testtable WHERE value=104","testtable",1);
+    
+    $resultStatement = select_prepared_userLogin("don");
+   
+    
+    
         
 ?>

@@ -19,7 +19,7 @@
   
     
     include('connectionStrings.php');
- 
+    
     //boolean variable used to controle access to the SQL query 
     $passedRegex = TRUE;
     $postUsername = $_POST['username'];
@@ -81,20 +81,28 @@
          * if they are trusted we run a query and check the results and log annomalys
          * if they are intrusted we start a transaction before each query, check results and roll back if the result is unexpected
          */  
-         
-         
+
         if(isset($_SESSION['unTrustedUser'])){
-            $result = select_sqliTransaction("SELECT username, password FROM userLogonView WHERE username = '$formusername' LIMIT 1",1);
+            //SELECT username, password FROM userLogonView WHERE username = '$formusername' LIMIT 1
+            $resultArray = select_prepared_userLogin_transaction($formusername);
         }else{
-            $result = select_sqliLog("SELECT username, password FROM userLogonView WHERE username = '$formusername' LIMIT 1",1);
-        }  
+            // SELECT username, password FROM userLogonView WHERE username = '$formusername' LIMIT 1
+            $resultArray = select_prepared_userLogin($formusername);
+        } 
+        
+        if(empty($resultArray)){
+            echo "no such user";
+            exit;
+        }else{
+            $numRows = $resultArray["numRows"];
+        }
         
         /*
          * mysql_query() was chosen over the other connection functions as it only allows one query to be sent to the DB
          * if a second query was introduced via SLQ injection the second query would not exacute 
          */
          
-        $numRows = mysqli_num_rows($result);
+        //$numRows = mysqli_num_rows($result);
         
         /*
          * Before each user can set up account, there chosen username is checked against the DB to ensure that it is unique, so the username becomes a unique identifier
@@ -118,19 +126,15 @@
             //***header("Location: ../failedLogin.php?error");
             exit();
         }else{
-            while ($row = mysqli_fetch_assoc($result)) {
-                
-                $dbUsername=$row['username'] ;
-                $dbPassword=$row['password'] ;
-                // echo 'fm u: '.$formusername . '<br>';
-                // echo 'db u: '.$dbUsername . '<br>';
-                // echo 'db p: '.$dbPassword . '<br>';
-                // echo 'rm p: '.$formpassword . '<br>';
-                //echo var_dump(password_verify($formpassword, $dbPassword)) . '<br>';
-                
+            if(!empty($resultArray["username"]) && !empty($resultArray["username"])){
+                $dbUsername = $resultArray["username"];
+                $dbPassword = $resultArray["password"];
+                $dbSalt = $resultArray["salt"];
+                include("../pem/pepper.php");
+                // add salt and pepper
+                $password_withSaltAndPepper = pepper.$formpassword.$dbSalt;
                 // here the users password is verified from the originally hashed one from the db
-                //if($formusername == $dbUsername && $formpassword == $dbPassword){
-                if($formusername == $dbUsername && password_verify($formpassword, $dbPassword)){
+                if($formusername == $dbUsername && password_verify($password_withSaltAndPepper, $dbPassword)){
                     echo "signed in";
                     $_SESSION['user'] = $dbUsername;
                     // adds the users IP address to the session, this will be used for validation at different stages to stop session hijacking - get_client_ip_env() included from includes/connect.php
@@ -143,13 +147,17 @@
                     $_SESSION['cookieId'] = $randomID;
                     //cookies expires within a hour, has a specified path, specifieddomain, are secure flagged, and has HTTP Only flagged
                     setcookie('cookieId', $randomID, time()+3600, "/", "request-hub.com", 1, 1);
-                    // header("Location:../passval.php");
+                    header("Location: welcome.php");
                     exit();
-                    
                 }else{
-                    //***header("Location: ../failedLogin.php?error");
+                    echo "no match pw";
                     exit();
-                }
+                } 
+            }else{
+                //***header("Location: ../failedLogin.php?error");
+                echo "no match us";
+                exit();
+                
             }
             //***header("Location: ../failedLogin.php?error");
             exit();
@@ -169,9 +177,6 @@
          //include("../logs/logs.php");
          //***header("Location: ../failedLogin.php?error");
     }
-    
-    
-    
 ?>  
     
 
