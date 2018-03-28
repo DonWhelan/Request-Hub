@@ -45,7 +45,7 @@
          *          |-- index.php
          *
          */
-        include("../pem/sqlMaster.php");
+        include("../../pem/sqlMaster.php");
         $connection = mysqli_connect(mHOST, mUSER, mPASS);
         if (!$connection) {
             trigger_error("Could not reach database!<br/>");

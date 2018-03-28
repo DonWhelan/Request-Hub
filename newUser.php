@@ -17,7 +17,7 @@
      */
     
     session_start();
-    include("connectionStrings.php");
+    include("includes/connectionStrings.php");
         
     /*
      *  --Regular Expressions(Regex) are used to check for characters that we dont want entered or that we would not expect to be entered into forms --

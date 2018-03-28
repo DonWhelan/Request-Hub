@@ -18,7 +18,7 @@
      */
   
     
-    include('connectionStrings.php');
+    include('includes/connectionStrings.php');
     
     //boolean variable used to controle access to the SQL query 
     $passedRegex = TRUE;
