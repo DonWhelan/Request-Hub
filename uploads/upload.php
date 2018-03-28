@@ -1,5 +1,8 @@
 <?php
     session_start();
+    if($_SESSION['browser'] != $_SERVER['HTTP_USER_AGENT'] && $_SESSION['ip'] != get_client_ip_env() && $_COOKIE['cookieId'] != $_SESSION['cookieId']) {
+        header("Location: index.php");
+    }
     
     /* 
      * ----------- Checks photos to be uploaded, calls virus total API and saves the outside the web root ------------------
@@ -15,11 +18,13 @@
      * - Checks the responce from virus total
      * - Based on the responce it..
      * - A) Moves file outside the web directory to store
-     * - B) delets file 
+     * - B) delets file
+     * - check if user is trusted
+     * - update images table with prepaired statment
      * ---------------------------------------------------------------------------------------------------------------------
      */
 
-    $debug = true;
+    $debug = false;
     require_once('../includes/connectionStrings.php');
     include('../includes/virustotal.class.php');
     include('../includes/virustotalFunctions.php');
@@ -63,11 +68,13 @@
                 $path = 'images/'.$_FILES['uploaded_file']['name'];
                 $InWebRootPathAndOriginalFileName = 'images/'.$_FILES['uploaded_file']['name'];
                 if($debug){echo "path: ".$InWebRootPathAndOriginalFileName."<br>";}
+                
                 /*
                  * Ive used $_FILES and move_uploaded_file() to put the uploaded files into the right directory, 
                  * These functions prevent file name injections caused by register_globals
                  * also we change the same to a random string to prevent filename injection
                  */
+                 
                 if(move_uploaded_file($_FILES['uploaded_file']['tmp_name'], $InWebRootPathAndOriginalFileName)) {
                     $OriginalFileName = basename( $_FILES['uploaded_file']['name']);
                     $name = "";
@@ -114,6 +121,23 @@
                         if($debug){echo "uploaded and Qd with virus total - no signature ";}
                         // 12 - remove temp file
                         unlink("images/".$OriginalFileName);
+                        // 13 - insert to database
+                        // 14 - check if user is trusted
+                        if(isset($_SESSION['unTrustedUser'])){
+                            // INSERT INTO images (filename, hash, owner, virusFree) VALUES (?,?,?,?)
+                            // $dir, $ufilename, $uhash, $uowner, $uvirusFree, $expectedResult
+                            if(!insert_prepared_imageUploadTransaction("../", $newFileName.".".$ext, $sha256, $_SESSION['user'], 0, 1)){
+                                $_SESSION['unTrustedUser'] = true;
+                            }
+                        }else{
+                            // INSERT INTO images (filename, hash, owner, virusFree) VALUES (?,?,?,?)
+                            // $dir, $ufilename, $uhash, $uowner, $uvirusFree, $expectedResult
+                            if(!insert_prepared_imageUpload("../", $newFileName.".".$ext, $sha256, $_SESSION['user'], 0, 1)){
+                                $_SESSION['unTrustedUser'] = true;
+                            }
+                        }
+                        
+                        //header('location: ../welcome.php');
                     }
                 } else{
                     if($debug){echo "There was an error uploading the file, please try again!";}

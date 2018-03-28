@@ -29,7 +29,7 @@
      */
      
     // masterConnectionString() only has full root permission on its account on the MYSQL Server. 
-    function masterConnectionString(){
+    function masterConnectionString($dir){
         /* connection details are stored outside the web directory so they cannot be navigated to and are defined
          *
          *    www
@@ -45,7 +45,7 @@
          *          |-- index.php
          *
          */
-        include("../../pem/sqlMaster.php");
+        include($dir."../pem/sqlMaster.php");
         $connection = mysqli_connect(mHOST, mUSER, mPASS);
         if (!$connection) {
             trigger_error("Could not reach database!<br/>");
@@ -60,9 +60,9 @@
     }
     
     // selectConnectionString() only has SELECT permission on its account on the MYSQL Server.
-    function selectConnectionString(){
+    function selectConnectionString($dir){
         // connection details are stored outside the web directory and are defined
-        include("../pem/sqlSelect.php");
+        include($dir."../pem/sqlSelect.php");
         $connection = mysqli_connect(sHOST, sUSER, sPASS);
         if (!$connection) {
             trigger_error("Could not reach database!<br/>");
@@ -79,9 +79,9 @@
     }
     
     // insertConnectionString() only has SELECT INSERT permission on its account on the MYSQL Server.    
-    function insertConnectionString(){
+    function insertConnectionString($dir){
         // connection details are stored outside the web directory and are defined
-        include("../pem/sqlInsert.php");
+        include($dir."../pem/sqlInsert.php");
         $connection = mysqli_connect(iHOST, iUSER, iPASS);
         if (!$connection) {
             trigger_error("Could not reach database!<br/>");
@@ -98,9 +98,9 @@
     }
     
     // updateConnectionString() only has SELECT and UPDATE permission on its account on the MYSQL Server.  
-    function updateConnectionString(){
+    function updateConnectionString($dir){
         // connection details are stored outside the web directory and are defined
-        include("../pem/sqlUpdate.php");
+        include($dir."../pem/sqlUpdate.php");
         $connection = mysqli_connect(uHOST, uUSER, uPASS);
         if (!$connection) {
             trigger_error("Could not reach database!<br/>");
@@ -117,9 +117,9 @@
     }
     
     // deleteConnectionString() only has SELECT and DELETE permission on its account on the MYSQL Server.      
-    function deleteConnectionString(){
+    function deleteConnectionString($dir){
         // connection details are stored outside the web directory and are defined
-        include("../pem/sqlDelete.php");
+        include($dir."../pem/sqlDelete.php");
         $connection = mysqli_connect(dHOST, dUSER, dPASS);
         if (!$connection) {
             trigger_error("Could not reach database!<br/>");
@@ -148,7 +148,7 @@
      */
      
     function escape_data($dataFromForms) {
-        $conn = selectConnectionString();
+        $conn = selectConnectionString($dir);
         if (function_exists('mysql_real_escape_string')) {
             $dataFromForms = mysqli_real_escape_string (trim($dataFromForms), $connection);
             $dataFromForms = strip_tags($dataFromForms);
@@ -192,8 +192,8 @@
      */    
     
     //  select_sqli() passes a Select query to the DB with no checks on how that query effects the DB 
-    function select_sqli($select_query) {
-        $connection = selectConnectionString();
+    function select_sqli($dir,$select_query) {
+        $connection = selectConnectionString($dir);
         $queryresult = mysqli_query($connection, $select_query); 
         if (! $queryresult){
             echo('Database error: ' . mysqli_error($connection));
@@ -208,8 +208,8 @@
      *   if the effected number of rows does not match the what is thought, a security logs is created 
      */
      
-    function select_sqliLog($select_query,$expectedResult) {
-        $connection = selectConnectionString();
+    function select_sqliLog($dir,$select_query,$expectedResult) {
+        $connection = selectConnectionString($dir);
         $queryresult = mysqli_query($connection, $select_query); 
         $numRows = mysqli_affected_rows($connection);
         if (! $queryresult){
@@ -228,8 +228,8 @@
      *   if the effected number of rows does not match the what is thought, a security logs is created 
      */
      
-    function select_sqliLog_max1_Rnum($select_query,$expectedResult) {
-        $connection = selectConnectionString();
+    function select_sqliLog_max1_Rnum($dir,$select_query,$expectedResult) {
+        $connection = selectConnectionString($dir);
         $queryresult = mysqli_query($connection, $select_query); 
         $numRows = mysqli_affected_rows($connection);
         if (! $queryresult){
@@ -253,8 +253,8 @@
      *   If the effected number of rows does match what is thought, the query is commited
      */
      
-    function select_sqliTransaction($select_query,$expectedResult) {
-        $connection = selectConnectionString();
+    function select_sqliTransaction($dir,$select_query,$expectedResult) {
+        $connection = selectConnectionString($dir);
         mysqli_autocommit($connection,FALSE);
         mysqli_query($connection,"start transaction");
         $queryresult = mysqli_query($connection, $select_query); 
@@ -276,7 +276,7 @@
     
     function select_prepared_userLogin($valueToFind) {
         // ref : https://www.w3schools.com/php/php_mysql_prepared_statements.asp
-        $connection = selectConnectionString();
+        $connection = selectConnectionString(null);
         /* check connection */
         if (mysqli_connect_errno($connection)) {
             printf("Connect failed: %s\n", mysqli_connect_error());
@@ -315,7 +315,7 @@
     }
     
     function select_prepared_userLogin_transaction($valueToFind) {
-        $connection = selectConnectionString();
+        $connection = selectConnectionString(null);
         /* check connection */
         if (mysqli_connect_errno($connection)) {
             printf("Connect failed: %s\n", mysqli_connect_error());
@@ -365,6 +365,8 @@
         mysqli_close($connection);
         return $queryresult;
     }
+    
+    //insert_sqli("insert into images (filename, filepath) values ('test', 'test')");
     
     /* 
      *   insert_sqliLog() takes 3 arguments the query, the table and the expected amount of rows affected from that query
@@ -428,6 +430,59 @@
         mysqli_close($connection);
         return $queryresult;
     }
+    
+    function insert_prepared_imageUpload($dir, $ufilename, $uhash, $uowner, $uvirusFree, $expectedResult) {
+        $connection = insertConnectionString($dir);
+        // Check connection
+        if ($connection->connect_error) {
+            die("Connection failed: " . $connection->connect_error);
+        }
+        $stmt = $connection->prepare("INSERT INTO images (filename, hash, owner, virusFree) VALUES (?,?,?,?)");
+        $filename = $ufilename;
+        $hash = $uhash;
+        $owner = $uowner;
+        $virusFree = $uvirusFree;
+        $stmt->bind_param("ssss", $filename, $hash, $owner, $virusFree);
+        $stmt->execute();
+        $affectedRows = mysqli_stmt_affected_rows($stmt);
+        // check expected result
+        if($affectedRows != $expectedResult){
+            include("logs/logsMail.php");
+            return false;
+        }else{
+            return true;
+        }
+    }    
+        
+    function insert_prepared_imageUploadTransaction($dir, $ufilename, $uhash, $uowner, $uvirusFree, $expectedResult) {
+        $connection = insertConnectionString($dir);
+        mysqli_autocommit($connection,FALSE);
+        mysqli_query($connection,"start transaction"); 
+        
+        // Check connection
+        if ($connection->connect_error) {
+            die("Connection failed: " . $connection->connect_error);
+        }
+        $stmt = $connection->prepare("INSERT INTO images (filename, hash, owner, virusFree) VALUES (?,?,?,?)");
+        $filename = $ufilename;
+        $hash = $uhash;
+        $owner = $uowner;
+        $virusFree = $uvirusFree;
+        $stmt->bind_param("ssss", $filename, $hash, $owner, $virusFree);
+        $stmt->execute();
+        $affectedRows = mysqli_stmt_affected_rows($stmt);
+        // check expected result
+        if($affectedRows != $expectedResult){
+            include("logs/logsMail.php");
+            mysqli_query($connection,"rollback");
+            return false;
+        }else{
+            mysqli_query($connection,"commit");
+            return true;
+        }
+        mysqli_close($connection);
+    }
+    //insert_prepared_imageUpload("../");
     
     /*  - update_sqli Functions - 
      *  update_sqli(), update_sqliLog() and update_sqliTransaction() all use updateConnectionString() which has SELECT,UPDATE and LOCK only access to the DB
@@ -595,45 +650,4 @@
         return $queryresult;
     }
     
-    
-    
-    // PREPAIRED QUERY  
-    
-    function select_prepared($valueToFind) {
-        $connection = selectConnectionString();
-        /* check connection */
-        if (mysqli_connect_errno($connection)) {
-            printf("Connect failed: %s\n", mysqli_connect_error());
-            exit();
-        }
-        
-        /* create a prepared statement */
-        if ($stmt = mysqli_prepare($connection, "SELECT username FROM users where username = ? ")) {
-      
-            /* bind parameters for markers */
-            mysqli_stmt_bind_param($stmt, $valueToFind);
-        
-            /* execute query */
-            mysqli_stmt_execute($stmt);
-            /* bind result variables */
-            mysqli_stmt_bind_result($stmt,  $value);
-        
-            /* fetch value */
-            while(mysqli_stmt_fetch($stmt)){
-                echo $value;
-            }
-        
-            /* close statement */
-            mysqli_stmt_close($stmt);
-            //return $value;
-        }
-        
-        /* close connection */
-        mysqli_close($connection);
-    }
-    
-    //select_prepared(102);
-
-    
-   
 ?>

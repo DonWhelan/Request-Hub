@@ -6,8 +6,8 @@
      * There are several steps to this:
      * - Check we have all the nessesery information to check the credentials
      * - Scrub the user data
-     * - Check if username is in the 'users' table, check the expected results for that query
-     * - If it is, we use password_verify() to check if the hashed passwords match
+     * - Check if username is in the 'users' table, retrive the pw-hash and the salt, check the expected results for that query
+     * - If it is, we use password_verify() to check if the pepper hashed password and salt match
      * - Create a session for the user
      * - We add the usersname and access level of the user from the DB to the session
      * - We add the IP address of the user to the session
@@ -17,7 +17,6 @@
      * ---------------------------------------------------------------------------------------------------------------------
      */
   
-    
     include('includes/connectionStrings.php');
     
     //boolean variable used to controle access to the SQL query 
@@ -71,8 +70,6 @@
 
     if($passedRegex){
 
-        // as we are using php's password hash we just check for the username, so we can pull the pass word hash from the DB to compair
-        
         /*
          * We have created a view of the users table called userLogonView. It only has access to username and password colums,
          * if details of the query were exploited only u-name and p-word would be exposed and no other personal information.
@@ -98,12 +95,10 @@
         }
         
         /*
-         * mysql_query() was chosen over the other connection functions as it only allows one query to be sent to the DB
+         * mysqli_query() was chosen over the other connection functions as it only allows one query to be sent to the DB
          * if a second query was introduced via SLQ injection the second query would not exacute 
          */
-         
-        //$numRows = mysqli_num_rows($result);
-        
+
         /*
          * Before each user can set up account, there chosen username is checked against the DB to ensure that it is unique, so the username becomes a unique identifier
          * Because of this a username query should only have 0 or 1 row effected
@@ -157,7 +152,6 @@
                 //***header("Location: ../failedLogin.php?error");
                 echo "no match us";
                 exit();
-                
             }
             //***header("Location: ../failedLogin.php?error");
             exit();
