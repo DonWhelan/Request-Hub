@@ -24,7 +24,7 @@
      * ---------------------------------------------------------------------------------------------------------------------
      */
 
-    $debug = false;
+    $debug = true;
     require_once('../includes/connectionStrings.php');
     include('../includes/virustotal.class.php');
     include('../includes/virustotalFunctions.php');
@@ -32,38 +32,37 @@
     
     // 1 - only logged in user can upload file(session managment)
     
-    // 2 - set file size
-    ini_set('post_max_size', '40M');
-    ini_set('upload_max_filesize', '40M');
-    ini_set('max_file_uploads', 2);
+    // // 2 - set file size
+    // ini_set('post_max_size', '40M');
+    // ini_set('upload_max_filesize', '40M');
+    // ini_set('max_file_uploads', 2);
     
     
-    // 3 - check if it is a image
-    if(@is_array(getimagesize($_FILES['uploaded_file']['tmp_name']))){
-        // debbug
-        if($debug){echo "is a image<br>";
-        echo "name: ".$_FILES['uploaded_file']['name']."<br>";
-        echo "size ".$_FILES['uploaded_file']['size']."<br>";
-        print_r($_FILES['uploaded_file']);}
+    // // 3 - check if it is a image
+    // if(@is_array(getimagesize($_FILES['uploaded_file']['tmp_name']))){
+    //     if($debug){echo "is a image<br>";
+    //     echo "name: ".$_FILES['uploaded_file']['name']."<br>";
+    //     echo "size ".$_FILES['uploaded_file']['size']."<br>";
+    //     print_r($_FILES['uploaded_file']);}
 
-        // 4 - check file size
-        if ($_FILES['uploaded_file']['size'] > 400000){
-            if($debug){echo "file too large";}
-            // handel error
-        }else{
-            // 5 - check if it is a image (by ext)
-            if(!empty($_FILES['uploaded_file'])){
-                $path = "images/";
-                $ext = (explode(".", $_FILES['uploaded_file']['name']));
-                $ext = end($ext);
-                if($debug){echo $ext."<br>";}
+    //     // 4 - check file size
+    //     if ($_FILES['uploaded_file']['size'] > 400000){
+    //         if($debug){echo "file too large";}
+    //         // handel error
+    //     }else{
+    //         // 5 - check if it is a image (by ext)
+    //         if(!empty($_FILES['uploaded_file'])){
+    //             $path = "images/";
+    //             $ext = (explode(".", $_FILES['uploaded_file']['name']));
+    //             $ext = end($ext);
+    //             if($debug){echo $ext."<br>";}
                 
-                // 6 - check if it is a image (by type)
-                $allowed_types = ['image/jpg', 'image/png', 'image/jpeg', 'image/gif']; 
-                if (!in_array($_FILES['uploaded_file']['type'], $allowed_types)) {
-                    die();
-                    // handel error
-                }
+    //             // 6 - check if it is a image (by type)
+    //             $allowed_types = ['image/jpg', 'image/png', 'image/jpeg', 'image/gif']; 
+    //             if (!in_array($_FILES['uploaded_file']['type'], $allowed_types)) {
+    //                 die();
+    //                 // handel error
+    //             }
                 // 7 - Save to a temp file
                 $path = 'images/'.$_FILES['uploaded_file']['name'];
                 $InWebRootPathAndOriginalFileName = 'images/'.$_FILES['uploaded_file']['name'];
@@ -127,7 +126,7 @@
                             // INSERT INTO images (filename, hash, owner, virusFree) VALUES (?,?,?,?)
                             // $dir, $ufilename, $uhash, $uowner, $uvirusFree, $expectedResult
                             if(!insert_prepared_imageUploadTransaction("../", $newFileName.".".$ext, $sha256, $_SESSION['user'], 0, 1)){
-                                $_SESSION['unTrustedUser'] = true;
+                                // handel
                             }
                         }else{
                             // INSERT INTO images (filename, hash, owner, virusFree) VALUES (?,?,?,?)
@@ -142,9 +141,9 @@
                 } else{
                     if($debug){echo "There was an error uploading the file, please try again!";}
                 }
-            }
-        }
-    }
+          //  }
+       // }
+   // }
     
     //steganographyEncrypt();
     //steganographyDecrypt();

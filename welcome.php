@@ -2,10 +2,13 @@
 <?php
     session_start();
     include('includes/connectionStrings.php');
-
-    if($_SESSION['browser'] != $_SERVER['HTTP_USER_AGENT'] && $_SESSION['ip'] != get_client_ip_env() && $_COOKIE['cookieId'] != $_SESSION['cookieId']) {
+    if($_SESSION['user'] != null){
+        if($_SESSION['browser'] != $_SERVER['HTTP_USER_AGENT'] && $_SESSION['ip'] != get_client_ip_env() && $_COOKIE['cookieId'] != $_SESSION['cookieId']) {
+            header("Location: index.php");
+        }
+    }else{
         header("Location: index.php");
-    }
+    }    
 ?>
 <html>
 <head>
@@ -21,6 +24,11 @@
     <hr>
     <br>
     view all photos
+    <?php 
+    echo '<pre>';
+    var_dump($_SESSION);
+    echo '</pre>';  
+    ?>
     
     
 </body>

@@ -45,7 +45,7 @@
 
     $subjectUsername = stripslashes(trim($postUsername));
     if (preg_match ('%^[A-Za-z0-9\.\'\-!_]{1,20}$%',$subjectUsername)) {
-        $formusername = escape_data($subjectUsername);
+        $formusername = escape_data(null,$subjectUsername);
     } else {
         //If criteria is not met $passedRegex is set to false so the $formusername will not be sent to the SQL server
         $passedRegex = FALSE;
@@ -56,7 +56,7 @@
     // $subjectPassword = stripslashes(trim($postPassword));
     $subjectPassword = $postPassword;
     if (preg_match ('%^[A-Za-z0-9\.\'\-!_]{1,20}$%',$subjectPassword)) {
-        $formpassword = escape_data($subjectPassword);
+        $formpassword = escape_data(null,$subjectPassword);
     } else {
         $passedRegex = FALSE;
         //***header("Location: ../failedLogin.php?char");
@@ -69,7 +69,7 @@
      */
 
     if($passedRegex){
-
+        
         /*
          * We have created a view of the users table called userLogonView. It only has access to username and password colums,
          * if details of the query were exploited only u-name and p-word would be exposed and no other personal information.
@@ -78,8 +78,9 @@
          * if they are trusted we run a query and check the results and log annomalys
          * if they are intrusted we start a transaction before each query, check results and roll back if the result is unexpected
          */  
-
+        
         if(isset($_SESSION['unTrustedUser'])){
+            echo "untrusted";
             //SELECT username, password FROM userLogonView WHERE username = '$formusername' LIMIT 1
             $resultArray = select_prepared_userLogin_transaction($formusername);
         }else{
@@ -142,6 +143,7 @@
                     $_SESSION['cookieId'] = $randomID;
                     //cookies expires within a hour, has a specified path, specifieddomain, are secure flagged, and has HTTP Only flagged
                     setcookie('cookieId', $randomID, time()+3600, "/", "request-hub.com", 1, 1);
+ 
                     header("Location: welcome.php");
                     exit();
                 }else{

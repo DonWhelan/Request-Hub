@@ -147,7 +147,7 @@
      *  http://www.newthinktank.com/2011/01/php-security/
      */
      
-    function escape_data($dataFromForms) {
+    function escape_data($dir,$dataFromForms) {
         $conn = selectConnectionString($dir);
         if (function_exists('mysql_real_escape_string')) {
             $dataFromForms = mysqli_real_escape_string (trim($dataFromForms), $connection);
@@ -186,7 +186,7 @@
         return $ipaddress;
     }
     
-    /*  - select_sqli Functions - 
+    /*  ---------- SELECT Functions ---------- //
      *  select_sqli(), select_sqliLog() and select_sqliTransaction() all use selectConnectionString() which has SELECT and LOCK only access to the DB
      *  each one takes in a SQL query as a argument and handles faild connections to the db server and the database its self
      */    
@@ -273,6 +273,12 @@
         return $queryresult;
     }
     
+    /*
+     *   select_prepared_userLogin() takes 1 argument 
+     *   it querys a view userLogonView
+     *   uses prepaired statments
+     *   it returns username, password, salt and numrows ina array
+     */   
     
     function select_prepared_userLogin($valueToFind) {
         // ref : https://www.w3schools.com/php/php_mysql_prepared_statements.asp
@@ -295,9 +301,8 @@
             mysqli_stmt_execute($stmt);
             /* bind result variables */
             mysqli_stmt_bind_result($stmt, $resultUsername, $resultPassword, $resultSalt);
-            // /* fetch value */
+            /* fetch value */
             $array = [];
-            //$result = mysqli_stmt_fetch($stmt);
             while (mysqli_stmt_fetch($stmt)) {
                 $array = ["username" => $resultUsername, "password" => $resultPassword, "salt" => $resultSalt, "numRows" => ""];
             }
@@ -314,6 +319,15 @@
     
     }
     
+    /*
+     *   select_prepared_userLogin_transaction() takes 1 argument
+     *   starts a transaction
+     *   it querys a view userLogonView
+     *   uses prepaired statments
+     *   it returns username, password, salt and numrows ina array
+     *   If the effected number of rows does match what is thought, the query is commited, if not rolled back
+     */    
+    
     function select_prepared_userLogin_transaction($valueToFind) {
         $connection = selectConnectionString(null);
         /* check connection */
@@ -326,10 +340,12 @@
         // starts transaction
         mysqli_query($connection,"start transaction");
         $usernameToFind = $valueToFind;
+        
         /*
          * We have created a view of the users table called userLogonView. It only has access to username and password colums,
          * if details of the query were exploited only u-name and p-word would be exposed and no other personal information.
-         */  
+         */
+         
         if ($stmt = mysqli_prepare($connection, "SELECT username, password, salt FROM userLogonView WHERE username = ? LIMIT 1")) {
             mysqli_stmt_bind_param($stmt, "s", $usernameToFind);
             mysqli_stmt_execute($stmt);
@@ -352,21 +368,18 @@
     
     }
     
-    /*  - insert_sqli Functions - 
+    /*  ---------- INSERT Functions ---------- //
      *  insert_sqli(), insert_sqliLog() and insert_sqliTransaction() all use insertConnectionString() which has SELECT,INSERT and LOCK only access to the DB
      *  each one takes in a SQL query as a argument and handles faild connections to the db server and the database its self
      */    
      
-    //  select_sqli() passes a insert query to the DB with no checks on how that query effects the DB     
-    function insert_sqli($insert_query) {
-        $connection = insertConnectionString();
+    function insert_sqli($dir,$insert_query) {
+        $connection = insertConnectionString($dir);
         $queryresult = mysqli_query($connection, $insert_query) 
         or die(mysqli_error($connection));
         mysqli_close($connection);
         return $queryresult;
     }
-    
-    //insert_sqli("insert into images (filename, filepath) values ('test', 'test')");
     
     /* 
      *   insert_sqliLog() takes 3 arguments the query, the table and the expected amount of rows affected from that query
@@ -374,8 +387,8 @@
      *   The effected number of rows is calculated by compairing effected rows, and counting the rows before and after the insertion 
      */    
     
-    function insert_sqliLog($insert_query, $table, $expectedResult) {
-        $connection = insertConnectionString();
+    function insert_sqliLog($dir,$insert_query, $table, $expectedResult) {
+        $connection = insertConnectionString($dir);
         
         $sql = "Select * FROM $table";
         $result = mysqli_query($connection,$sql); 
@@ -404,8 +417,8 @@
      *   If the effected number of rows does match what is thought, the query is commited
      */    
     
-    function insert_sqliTransaction($insert_query, $table, $expectedResult) {
-        $connection = insertConnectionString();
+    function insert_sqliTransaction($dir, $insert_query, $table, $expectedResult) {
+        $connection = insertConnectionString($dir);
         mysqli_autocommit($connection,FALSE);
         mysqli_query($connection,"start transaction"); 
         
@@ -431,6 +444,13 @@
         return $queryresult;
     }
     
+    /*
+     *   insert_prepared_imageUpload takes 6 arguments and querys a prepaired statment to call images
+     *   exacutes the query and the takes the affeted rows
+     *   checks the affected rows agains the expected rows
+     *   returns true if affected rows are equal expected rows they match, and false if not
+     */     
+    
     function insert_prepared_imageUpload($dir, $ufilename, $uhash, $uowner, $uvirusFree, $expectedResult) {
         $connection = insertConnectionString($dir);
         // Check connection
@@ -447,12 +467,19 @@
         $affectedRows = mysqli_stmt_affected_rows($stmt);
         // check expected result
         if($affectedRows != $expectedResult){
-            include("logs/logsMail.php");
+            //include("logs/logsMail.php");
             return false;
         }else{
             return true;
         }
-    }    
+    }   
+    
+    /*
+     *   insert_prepared_imageUploadTransaction takes 6 arguments and querys a prepaired statment to call images
+     *   starts a transaction, exacutes the query and the takes the affeted rows
+     *   checks the affected rows agains the expected rows
+     *   returns true and commits the transaction if affected rows are equal, expected rows they match, and false and rolls back if not
+     */ 
         
     function insert_prepared_imageUploadTransaction($dir, $ufilename, $uhash, $uowner, $uvirusFree, $expectedResult) {
         $connection = insertConnectionString($dir);
@@ -473,7 +500,7 @@
         $affectedRows = mysqli_stmt_affected_rows($stmt);
         // check expected result
         if($affectedRows != $expectedResult){
-            include("logs/logsMail.php");
+            //include("logs/logsMail.php");
             mysqli_query($connection,"rollback");
             return false;
         }else{
@@ -482,16 +509,14 @@
         }
         mysqli_close($connection);
     }
-    //insert_prepared_imageUpload("../");
     
-    /*  - update_sqli Functions - 
+    /*  ---------- UPDATE Functions ---------- //
      *  update_sqli(), update_sqliLog() and update_sqliTransaction() all use updateConnectionString() which has SELECT,UPDATE and LOCK only access to the DB
      *  each one takes in a SQL query as a argument and handles faild connections to the db server and the database its self
      */     
     
-    //  update_sqli() passes a update query to the DB with no checks on how that query effects the DB      
-    function update_sqli($update_query){
-        $connection = updateConnectionString();
+    function update_sqli($dir,$update_query){
+        $connection = updateConnectionString($dir);
         $queryresult = mysqli_query($connection, $update_query)
         or die(mysqli_error($connection));
         mysqli_close($connection);
@@ -504,8 +529,8 @@
      *   The effected number of rows is calculated by compairing effected rows, and counting the rows before and after the update 
      */     
     
-    function update_sqliLog($update_query, $table, $expectedResult){
-        $connection = updateConnectionString();
+    function update_sqliLog($dir,$update_query, $table, $expectedResult){
+        $connection = updateConnectionString($dir);
         
         $sql = "Select * FROM $table";
         $result = mysqli_query($connection,$sql); 
@@ -536,8 +561,8 @@
      *   If the effected number of rows does match what is thought, the query is commited
      */       
     
-    function update_sqliTransaction($update_query, $table, $expectedResult){
-        $connection = updateConnectionString();
+    function update_sqliTransaction($dir,$update_query, $table, $expectedResult){
+        $connection = updateConnectionString($dir);
         mysqli_autocommit($connection,FALSE);
         mysqli_query($connection,"start transaction");         
         
@@ -567,14 +592,13 @@
         return $queryresult;
     }  
     
-    /*  - delete_sqli Functions - 
+    /*  ---------- DELETE Functions ---------- //
      *  delete_sqli(), delete_sqliLog() and delete_sqliTransaction() all use deleteConnectionString() which has SELECT, DELETE and LOCK only access to the DB
      *  each one takes in a SQL query as a argument and handles faild connections to the db server and the database its self
      */     
     
-    //  delete_sqli() passes a delete query to the DB with no checks on how that query effects the DB      
-    function delete_sqli($delete_query){
-        $connection = deleteConnectionString();
+    function delete_sqli($dir,$delete_query){
+        $connection = deleteConnectionString($dir);
         $queryresult = mysqli_query($connection, $delete_query)
         or die(mysqli_error($connection));
         mysqli_close($connection);
@@ -587,7 +611,7 @@
      *   The effected number of rows is calculated by compairing effected rows, and counting the rows before and after the delete 
      */      
     
-    function delete_sqliLog($delete_query, $table, $expectedResult){
+    function delete_sqliLog($dir,$delete_query, $table, $expectedResult){
         $connection = deleteConnectionString();
         
         $sql = "Select * FROM $table";
@@ -619,8 +643,8 @@
      *   If the effected number of rows does match what is thought, the query is commited
      */      
     
-    function delete_sqliTransaction($delete_query, $table, $expectedResult){
-        $connection = deleteConnectionString();
+    function delete_sqliTransaction($dir,$delete_query, $table, $expectedResult){
+        $connection = deleteConnectionString($dir);
         mysqli_autocommit($connection,FALSE);
         mysqli_query($connection,"start transaction");         
         
