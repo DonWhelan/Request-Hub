@@ -1,11 +1,16 @@
 <?php
     session_start();
-    if($_SESSION['browser'] != $_SERVER['HTTP_USER_AGENT'] && $_SESSION['ip'] != get_client_ip_env() && $_COOKIE['cookieId'] != $_SESSION['cookieId']) {
+    include('includes/connectionStrings.php');
+    if($_SESSION['user'] != null){
+        if($_SESSION['browser'] != $_SERVER['HTTP_USER_AGENT'] || $_SESSION['ip'] != get_client_ip_env() || $_COOKIE['cookieId'] != $_SESSION['cookieId']) {
+            header("Location: index.php");
+        }
+    }else{
         header("Location: index.php");
     }
     
     /* 
-     * ----------- Checks photos to be uploaded, calls virus total API and saves the outside the web root ------------------
+     * ----------- Checks photos to be uploaded, calls virus total API and saves file outside the web root ------------------
      * There are several steps to this:
      * - checks user is logged in and authenticated
      * - Sets file size constraints in php.ini
@@ -16,8 +21,8 @@
      * - Saves the image to a temp directory
      * - Calls to the  virus total api to scan for malware
      * - Checks the responce from virus total
-     * - Based on the responce it..
-     * - A) Moves file outside the web directory to store
+     * - Based on the responce it...
+     * - A) Moves file outside the web directory to store and Encrypts contents of file
      * - B) delets file
      * - check if user is trusted
      * - update images table with prepaired statment
@@ -29,6 +34,7 @@
     include('includes/virustotal.class.php');
     include('includes/virustotalFunctions.php');
     include('includes/Steganography.php');
+    include('includes/mcrypt.php');
     
     // 1 - only logged in user can upload file(session managment)
     
@@ -101,9 +107,14 @@
                             $ext=substr($OriginalFileName,strrpos($OriginalFileName,'.')+1);
                             $newFileName = bin2hex(random_bytes(8));
                             // 11 - Save file outside web directory 
-                            copy("images/".$OriginalFileName,"../images/".$newFileName.".".$ext);
+                            $fileOutOfWebRoot = "../images/download/".$newFileName.".".$ext;
+                            copy("images/".$OriginalFileName,$fileOutOfWebRoot);
+                            // 12 - Encrypts contents of file
+                            $originalContents = file_get_contents($fileOutOfWebRoot);
+                            $encryptedContents = mcryptEncrypt($key,$originalContents);
+                            file_put_contents($fileOutOfWebRoot,$encryptedContents);
                             if($debug){echo "uploaded and has a clean responce from virus total";}
-                            // 12 - remove temp file
+                            // 13 - remove temp file
                             unlink("images/".$OriginalFileName);
                         }else{
                             // contains malware
@@ -116,12 +127,17 @@
                         $ext=substr($OriginalFileName,strrpos($OriginalFileName,'.')+1);
                         $newFileName = bin2hex(random_bytes(8));
                         // 11 - Save file outside web directory 
-                        copy("images/".$OriginalFileName,"../images/".$newFileName.".".$ext);
+                        $fileOutOfWebRoot = "../images/download/".$newFileName.".".$ext;
+                        copy("images/".$OriginalFileName,$fileOutOfWebRoot);
+                        // 12 - Encrypts contents of file
+                        $originalContents = file_get_contents($fileOutOfWebRoot);
+                        $encryptedContents = mcryptEncrypt($key,$originalContents);
+                        file_put_contents($fileOutOfWebRoot,$encryptedContents);
                         if($debug){echo "uploaded and Qd with virus total - no signature ";}
-                        // 12 - remove temp file
+                        // 13 - remove temp file
                         unlink("images/".$OriginalFileName);
-                        // 13 - insert to database
-                        // 14 - check if user is trusted
+                        // 14 - insert to database
+                        // 15 - check if user is trusted
                         if(isset($_SESSION['unTrustedUser'])){
                             // INSERT INTO images (filename, hash, owner, virusFree) VALUES (?,?,?,?)
                             // $dir, $ufilename, $uhash, $uowner, $uvirusFree, $expectedResult

@@ -2,7 +2,7 @@
         //ref: http://thedebuggers.com/image-steganography-hiding-text-using-php/
         
         include('functions.php');
-        $image = 'db621adc1be58203.jpg';
+        $image = '92fe64345c6cc167.png';
         $im = imagecreatefrompng($image);
         $BinaryString = "";
         for($i=0; $i<344; $i++){

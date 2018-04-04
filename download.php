@@ -1,15 +1,14 @@
 <?php 
     session_start();
+    include('includes/connectionStrings.php');
     // 1 Sessions managment - redirects user to index if not logged in
     if($_SESSION['user'] != null){
-        if($_SESSION['browser'] != $_SERVER['HTTP_USER_AGENT'] && $_SESSION['ip'] != get_client_ip_env() && $_COOKIE['cookieId'] != $_SESSION['cookieId']) {
+        if($_SESSION['browser'] != $_SERVER['HTTP_USER_AGENT'] || $_SESSION['ip'] != get_client_ip_env() || $_COOKIE['cookieId'] != $_SESSION['cookieId']) {
             header("Location: index.php");
-            exit;
         }
     }else{
         header("Location: index.php");
-        exit;
-    }
+    } 
     
     /* 
      * ------------ Calls images from outside the web root to be downloaded to users while digitaly inprinted them ---------------------
@@ -38,13 +37,18 @@
      */
      
     if(!empty($_GET['file'])){
+        //  Checks that file exists 
+        if(!file_exists("../images/download/{$_GET['file']}")){
+            header("HTTP/1.0 404 Not Found");
+            exit;
+        }
         // 3 - Handels '../' to mitigate directory traversal - produces 404
         if (strpos($_GET['file'], '../') !== false) {
             header("HTTP/1.0 404 Not Found");
         }else{
             $fileName = basename($_GET['file']);
             // 4 - Adds the path type to the 'file'
-            $filePath = '../images/'.$fileName;
+            $filePath = '../images/download/'.$fileName;
             if(!empty($fileName) && file_exists($filePath)){
                 // 5 - Copys the image to the Steganography directory
                 copy($filePath , "Steganography/".$fileName);
@@ -54,7 +58,7 @@
                 echo 'The file does not exist.';
             }
         }
-    }
+}
     
     /*
      * - If the input is 'returnedFile' is returned to the browser
@@ -77,6 +81,8 @@
                 header("Content-Transfer-Encoding: binary");
                 // 10 - Reads the file
                 readfile($filePath);
+                // 11 - remove file
+                unlink($filePath);
                 exit;
             }else{
                 echo 'The file does not exist.';

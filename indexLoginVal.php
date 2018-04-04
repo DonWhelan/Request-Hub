@@ -44,7 +44,7 @@
      */
 
     $subjectUsername = stripslashes(trim($postUsername));
-    if (preg_match ('%^[A-Za-z0-9\.\'\-!_]{1,20}$%',$subjectUsername)) {
+    if (preg_match ('%^[A-Za-z0-9\.\'\-!_]{1,30}$%',$subjectUsername)) {
         $formusername = escape_data(null,$subjectUsername);
     } else {
         //If criteria is not met $passedRegex is set to false so the $formusername will not be sent to the SQL server
@@ -55,7 +55,7 @@
     
     // $subjectPassword = stripslashes(trim($postPassword));
     $subjectPassword = $postPassword;
-    if (preg_match ('%^[A-Za-z0-9\.\'\-!_]{1,20}$%',$subjectPassword)) {
+    if (preg_match ('%^[A-Za-z0-9\.\'\-!_]{1,30}$%',$subjectPassword)) {
         $formpassword = escape_data(null,$subjectPassword);
     } else {
         $passedRegex = FALSE;
