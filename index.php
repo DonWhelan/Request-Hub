@@ -1,55 +1,113 @@
+<!DOCTYPE html>
+<html lang="en">
 
-<html>
 <head>
-    <link href="//maxcdn.bootstrapcdn.com/bootstrap/3.3.0/css/bootstrap.min.css" rel="stylesheet" id="bootstrap-css">
-<script src="//maxcdn.bootstrapcdn.com/bootstrap/3.3.0/js/bootstrap.min.js"></script>
-<script src="//code.jquery.com/jquery-1.11.1.min.js"></script>
-    
+
+    <?php
+		include("includes/pageIncludes/head.php");
+	?>
+
 </head>
 
+<body>
 
-<div class = "container">
-	<h1>Existing user</h1>
-	<div class="wrapper">
-		
-		<form action="indexLoginVal.php" method="post" name="Login_Form" class="form-signin" >       
-		     <h3 class="form-signin-heading">Please Sign In</h3>
-			  <hr class="colorgraph"><br>
-			  
-			  <input type="text" class="form-control" name="username" placeholder="Username" required="" autofocus="" />
-			  <input type="password" class="form-control" name="password" placeholder="Password" required=""/>     		  
-			 
-			  <button class="btn btn-lg btn-primary btn-block"  name="Submit" value="Login" type="Submit">Login</button>  			
-		</form>
-		
-	</div>
-</div>
+    <!--navbar-->
+    <?php
+		include("includes/pageIncludes/TopNav.php");
+	?>
 
-<div class = "container">
-	<h1>New user</h1>
-	<div class="wrapper">
-		
-		<form action="newUser.php" method="post" name="Login_Form" class="form-signin" >       
-		     <h3 class="form-signin-heading">Please Sign Up</h3>
-			  <hr class="colorgraph"><br>
-			  
-			  <input type="text" class="form-control" name="username" placeholder="Username" required="" autofocus="" />
-			  <input type="password" class="form-control" name="password" placeholder="Password" required=""/>   
-			  <input type="password" class="form-control" name="passwordmatch" placeholder="Password" required=""/>  
-			  <input type="text" class="form-control" name="email" placeholder="email" required=""/>  
-			 
-			  <button class="btn btn-lg btn-primary btn-block"  name="Submit" value="Login" type="Submit">Login</button>  			
-		</form>
-		
-	</div>
-</div>
-<br>
+        <!-- filler -->
+        <div class="services-container">
+            <div class="container">
+                <div class="row" style="height:130px;">
+                    <div class="col-sm-12 ">
+                    </div>
+                </div>
+            </div>
+        </div>
 
+        <!-- Services -->
+        <div class="services-container">
+            <div class="container">
+                <div class="row">
+                    <div class="col-sm-4 services-box">
+                        <center>
+                            <div class="services-box-icon"><img src="assets/img/icons/services-1.png" alt=""></div>
+                            <h3>Information security</h3>
+                            <p style="color:#9ea0a6">Sed ut perspiciatis unde omnis iste natus error sit voluptatem accusantium doloremque laudantium.</p>
+                        </center>
+                    </div>
+                    <div class="col-sm-4 services-box">
+                        <center>
+                            <div class="services-box-icon"><img src="assets/img/icons/services-2.png" alt=""></div>
+                            <h3>Auditing and reporting</h3>
+                            <p style="color:#9ea0a6">Eius modi tempora incidunt ut labore et dolore magnam aliquam quaerat voluptatem.</p>
+                        </center>
+                    </div>
+                    <div class="col-sm-4 services-box">
+                        <center>
+                            <div class="services-box-icon"><img src="assets/img/icons/services-3.png" alt=""></div>
+                            <h3>Secure form handeling</h3>
+                            <p style="color:#9ea0a6">Vero eos et accusamus et iusto odio dignissimos ducimus qui blanditiis praesentium voluptatum.</p>
+                        </center>
+                    </div>
+                </div>
+            </div>
+        </div>
 
+        <!-- filler -->
+        <div class="services-container">
+            <div class="container">
+                <div class="row" style="height:60px;">
+                    <div class="col-sm-12">
+                    </div>
+                </div>
+            </div>
+        </div>
 
+        <div class="services-container" style="background:#9DCBC0; height:450px;">
+            <div class="container">
+                <div class="row">
+                    <div class="col-sm-12 portfolio">
+                        <br>
+                        <br>
+                        <br>
+                        <br>
 
+                        <center>
+                            <h2><b   style="color:#383D4A">Request Hub</b></h2>
+                            <br>
+                            <br>
+                            <p style="color:white">The problem that Request Hub solves is the centralised management of IT service request, that a IT Service Provider (ITSP) would have. As a IT service provider, you would offer to look after other organisations IT, for a service fee , They would have to have a process for handling requests for service not just from one but from all of there customers. Once you have a number of customers this can become very messy very quickly. What Request hub does is centralises all of these requests for the ITSP. The ITSP would have one log in where they can create customers and also create request. Then can then chose to assignee what request they like to what customers.
+                            </p>
+                            <br>
+                            <br>
+                        </center>
+                        <div class="col-sm-12 portfolio">
+                            <br>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="services-container">
+            <div class="container">
+                <br>
+                <br>
+                <br>
+                <br>
+                <br>
+                <div class="row" style="height:400px">
+                    <img src="images/line.png" style="max-width:100%; width:auto; height:320px">
+                </div>
+                <br>
+                <br>
+            </div>
+        </div>
+        <div class="services-container" style="background:#464c5b; height:50px;">
 
+        </div>
 
-
+</body>
 
 </html>

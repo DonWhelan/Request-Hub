@@ -41,16 +41,17 @@
              * It means I can re-authenticate users before the image is issued. so only logged in users can call images from the site
              * If the images are stored in the web root direct links to the image would display them without the user haveing to log in
              */
+             
             // 4 - Checks that file exists 
-            if(!file_exists("../images/download/{$_GET['file']}")){
+            if(!file_exists("../../images/view/{$_GET['file']}")){
               header("HTTP/1.0 404 Not Found");
               exit;
             } else {
                 // 5 - Adds the path type to the 'file' 
-                $mime_type = mime_content_type("../images/download/{$_GET['file']}");
+                $mime_type = mime_content_type("../../images/view/{$_GET['file']}");
                 header('Content-Type: '.$mime_type);
                 // 6 - Returns teh image using readfile()
-                $q = readfile("../images/download/{$_GET['file']}");
+                $q = readfile("../../images/view/{$_GET['file']}");
                 htmlspecialchars($q, ENT_QUOTES, 'UTF-8');
             }
             

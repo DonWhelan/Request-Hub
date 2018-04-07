@@ -91,7 +91,7 @@
         imagedestroy($im);
         unlink($fileName);
         rename('new.png', $fileName);
-        // 156- sets header back to download.php
+        // 16- sets header back to download.php
         header("location: ../download.php?returnedFile=$fileName");
     }
 ?>
