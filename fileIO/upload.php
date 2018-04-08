@@ -1,6 +1,6 @@
 <?php
     session_start();
-    include('includes/connectionStrings.php');
+    include('../model/connectionStrings.php');
     if($_SESSION['user'] != null){
         if($_SESSION['browser'] != $_SERVER['HTTP_USER_AGENT'] || $_SESSION['ip'] != get_client_ip_env() || $_COOKIE['cookieId'] != $_SESSION['cookieId']) {
             header("Location: index.php");
@@ -30,11 +30,11 @@
      */
 
     $debug = true;
-    require_once('includes/connectionStrings.php');
-    include('includes/virustotal.class.php');
-    include('includes/virustotalFunctions.php');
-    include('includes/Steganography.php');
-    include('includes/mcrypt.php');
+    require_once('../model/connectionStrings.php');
+    include('../includes/virustotal.class.php');
+    include('../includes/virustotalFunctions.php');
+    include('../includes/Steganography.php');
+    include('../includes/mcrypt.php');
     
     // 1 - only logged in user can upload file(session managment)
     
@@ -58,7 +58,7 @@
         }else{
             // 5 - check if it is a image (by ext)
             if(!empty($_FILES['uploaded_file'])){
-                $path = "images/";
+                $path = "../images/";
                 $ext = (explode(".", $_FILES['uploaded_file']['name']));
                 $ext = end($ext);
                 if($debug){echo $ext."<br>";}
@@ -70,8 +70,8 @@
                     // handel error
                 }
                 // 7 - Save to a temp file
-                $path = 'images/'.$_FILES['uploaded_file']['name'];
-                $InWebRootPathAndOriginalFileName = 'images/'.$_FILES['uploaded_file']['name'];
+                $path = '../images/'.$_FILES['uploaded_file']['name'];
+                $InWebRootPathAndOriginalFileName = '../images/'.$_FILES['uploaded_file']['name'];
                 if($debug){echo "path: ".$InWebRootPathAndOriginalFileName."<br>";}
                 
                 /*
@@ -107,7 +107,7 @@
                             $ext=substr($OriginalFileName,strrpos($OriginalFileName,'.')+1);
                             $newFileName = bin2hex(random_bytes(8));
                             // 11 - Save file outside web directory 
-                            $fileOutOfWebRoot = "../images/download/".$newFileName.".".$ext;
+                            $fileOutOfWebRoot = "../../images/download/".$newFileName.".".$ext;
                             copy("images/".$OriginalFileName,$fileOutOfWebRoot);
                             // 12 - Encrypts contents of file
                             $originalContents = file_get_contents($fileOutOfWebRoot);
@@ -127,32 +127,33 @@
                         $ext=substr($OriginalFileName,strrpos($OriginalFileName,'.')+1);
                         $newFileName = bin2hex(random_bytes(8));
                         // 11 - Save file outside web directory 
-                        $fileOutOfWebRoot = "../images/download/".$newFileName.".".$ext;
-                        copy("images/".$OriginalFileName,$fileOutOfWebRoot);
+                        $fileOutOfWebRoot = "../../images/download/".$newFileName.".".$ext;
+                        copy("../images/".$OriginalFileName,$fileOutOfWebRoot);
                         // 12 - Encrypts contents of file
                         $originalContents = file_get_contents($fileOutOfWebRoot);
                         $encryptedContents = mcryptEncrypt($key,$originalContents);
                         file_put_contents($fileOutOfWebRoot,$encryptedContents);
                         if($debug){echo "uploaded and Qd with virus total - no signature ";}
                         // 13 - remove temp file
-                        unlink("images/".$OriginalFileName);
+                        unlink("../images/".$OriginalFileName);
                         // 14 - insert to database
                         // 15 - check if user is trusted
                         if(isset($_SESSION['unTrustedUser'])){
                             // INSERT INTO images (filename, hash, owner, virusFree) VALUES (?,?,?,?)
                             // $dir, $ufilename, $uhash, $uowner, $uvirusFree, $expectedResult
-                            if(!insert_prepared_imageUploadTransaction("", $newFileName.".".$ext, $sha256, $_SESSION['user'], 0, 1)){
+                            if(!insert_prepared_imageUploadTransaction("../", $newFileName.".".$ext, $sha256, $_SESSION['user'], 0, 1)){
                                 // handel
                             }
                         }else{
                             // INSERT INTO images (filename, hash, owner, virusFree) VALUES (?,?,?,?)
                             // $dir, $ufilename, $uhash, $uowner, $uvirusFree, $expectedResult
-                            if(!insert_prepared_imageUpload("", $newFileName.".".$ext, $sha256, $_SESSION['user'], 0, 1)){
+                            if(!insert_prepared_imageUpload("../", $newFileName.".".$ext, $sha256, $_SESSION['user'], 0, 1)){
                                 $_SESSION['unTrustedUser'] = true;
                             }
                         }
                         
                         //header('location: ../welcome.php');
+                        echo "<a href='../view/welcome.php'>back</>";
                     }
                 } else{
                     if($debug){echo "There was an error uploading the file, please try again!";}

@@ -17,7 +17,7 @@
      */
     
     session_start();
-    include("includes/connectionStrings.php");
+    include("../model/connectionStrings.php");
 
     /*
      *  --Regular Expressions(Regex) are used to check for characters that we dont want entered or that we would not expect to be entered into forms --
@@ -43,50 +43,50 @@
 
     if(empty($un) || empty($pw) || empty($pwm) || empty($em)){
         $passedRegex = FALSE;
-        header("Location: userRegister.php?un");
+        header("Location: ../view/userRegister.php?un");
         exit();
     }
     
     if($pw != $pwm){
-       header("Location: userRegister.php?pw");
+       header("Location: ../view/userRegister.php?pw");
        exit();
     }
     
     $subjectUsername = stripslashes(trim($un));
     if (preg_match ('%^[A-Za-z0-9\.\' \-!_]{3,20}$%',$subjectUsername)) {
-        $username = escape_data(null,$subjectUsername);
+        $username = escape_data('../',$subjectUsername);
     } else {
         //If criteria is not met $passedRegex is set to false so the query connection will not open
         $passedRegex = FALSE;
         //we redirect the user back to newUser.php but add info to thr URL yo we can read why the user has been sent back and display the correct error messege
-        header("Location: userRegister.php?un");
+        header("Location: ../view/userRegister.php?un");
         exit();
     }
     
     $subjectPassword = stripslashes(trim($pw));
     if (preg_match ('%^[A-za-z0-9\.\' \-!_&@$~]{3,20}$%', $subjectPassword)) {
-        $password = escape_data(null,$subjectPassword);
+        $password = escape_data('../',$subjectPassword);
     } else {
         $passedRegex = FALSE;
-        header("Location: userRegister.php?pw");
+        header("Location: ../view/userRegister.php?pw");
         exit();
     }
     
     $subjectPasswordm = stripslashes(trim($pwm));
     if (preg_match ('%^[A-za-z0-9\.\' \-!_&@$~]{3,20}$%', $subjectPasswordm)) {
-        $passwordm = escape_data(null,$subjectPasswordm);
+        $passwordm = escape_data('../',$subjectPasswordm);
     } else {
         $passedRegex = FALSE;
-        header("Location: userRegister.php?pw");
+        header("Location: ../view/userRegister.php?pw");
         exit();
     }
     
     $subjectEmail = stripslashes(trim($em));
     if (preg_match ('%^[A-za-z0-9\.\' \-!_&@.$~]{3,30}$%', $subjectEmail)) {
-        $email = escape_data(null,$subjectEmail);
+        $email = escape_data('../',$subjectEmail);
     } else {
         $passedRegex = FALSE;
-        header("Location: userRegister.php?em");
+        header("Location: ../view/userRegister.php?em");
         exit();
     }
     
@@ -102,7 +102,7 @@
         $arr[] = "";
         // select_sqliLog_max1_Rnum returns a sql result object and num of rows affected from the query
         // userUsernameView is a view of users that only shows username
-        $arr = select_sqliLog_max1_Rnum(null,"SELECT username FROM userUsernameView WHERE username = '$username' LIMIT 1",1);   
+        $arr = select_sqliLog_max1_Rnum('../',"SELECT username FROM userUsernameView WHERE username = '$username' LIMIT 1",1);   
         
         /*
          * mysqli_query() was chosen over the other connection functions as it only allows one query to be sent to the DB
@@ -133,7 +133,7 @@
             //closed the sql connection
             mysql_close($connection);
             //redirects user index
-            header("Location: userRegister.php?rf");
+            header("Location: ../view/userRegister.php?rf");
             
         }else{
             
@@ -147,7 +147,7 @@
                 if($username == $dbUsername){
                     //we mark the username as not free
                     $UserNameFree = false;
-                    header("Location: userRegister.php?error");
+                    header("Location: ../view/userRegister.php?error");
                     exit();
                 }
             }
@@ -172,7 +172,7 @@
              */
             
             // brings in pepper which is a defined variable outside the web root
-            include("../pem/pepper.php");
+            include("../../pem/pepper.php");
             // salt generated
             $salt = bin2hex(random_bytes(25));
             // adds peper and salt to the password
@@ -182,7 +182,7 @@
             
             //we then log the user details to the DB
             //echo "hello friends";
-            insert_sqli(null,"INSERT INTO users (username, password, email, salt) VALUES ('$username','$userpasswordhashed','$email','$salt')");
+            insert_sqli('../',"INSERT INTO users (username, password, email, salt) VALUES ('$username','$userpasswordhashed','$email','$salt')");
             
             $_SESSION['user'] = $dbUsername;
             // adds the users IP address to the session, this will be used for validation at different stages to stop session hijacking - get_client_ip_env() included from includes/connect.php
@@ -197,7 +197,7 @@
             setcookie('cookieId', $randomID, time()+3600, "/", "request-hub.com", 1, 1);
             echo "new user created";
             //user then directed to their new profile
-            header("Location: newCompanyForm.php");
+            header("Location: ../view/newCompanyForm.php");
         }
    }else{
     
@@ -211,7 +211,7 @@
          */
      
         include("../logs/logs.php");
-        header("Location: userRegister.php?error");
+        header("Location: ../view/userRegister.php?error");
     }   
             
 ?>

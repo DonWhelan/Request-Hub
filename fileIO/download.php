@@ -1,6 +1,6 @@
 <?php 
     session_start();
-    include('includes/connectionStrings.php');
+    include('../model/connectionStrings.php');
     // 1 Sessions managment - redirects user to index if not logged in
     if($_SESSION['user'] != null){
         if($_SESSION['browser'] != $_SERVER['HTTP_USER_AGENT'] || $_SESSION['ip'] != get_client_ip_env() || $_COOKIE['cookieId'] != $_SESSION['cookieId']) {
@@ -48,12 +48,12 @@
         }else{
             $fileName = basename($_GET['file']);
             // 4 - Adds the path type to the 'file'
-            $filePath = '../images/download/'.$fileName;
+            $filePath = '../../images/download/'.$fileName;
             if(!empty($fileName) && file_exists($filePath)){
                 // 5 - Copys the image to the Steganography directory
-                copy($filePath , "Steganography/".$fileName);
+                copy($filePath , "../Steganography/".$fileName);
                 // 6 - Calls the encrypt.php scripts which user Steganography to inprint the downloading users info 
-                header("location: Steganography/encrypt.php?file=$fileName");
+                header("location: ../Steganography/encrypt.php?file=$fileName");
             }else{
                 echo 'The file does not exist.';
             }
@@ -71,7 +71,7 @@
             // 7 - Checks for invalid charicters in the file name
             $fileName = basename($_GET['returnedFile']);
             // 8 - Adds the path type to the 'returnedFile'
-            $filePath = 'Steganography/'.$fileName;
+            $filePath = '../Steganography/'.$fileName;
             if(!empty($fileName) && file_exists($filePath)){
                 // 9 - Define headers - ref: https://stackoverflow.com/questions/11090272/how-can-i-force-an-image-download-in-the-browser
                 header("Cache-Control: public");

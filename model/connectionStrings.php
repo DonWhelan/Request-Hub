@@ -282,7 +282,7 @@
     
     function select_prepared_userLogin($valueToFind) {
         // ref : https://www.w3schools.com/php/php_mysql_prepared_statements.asp
-        $connection = selectConnectionString(null);
+        $connection = selectConnectionString('../');
         /* check connection */
         if (mysqli_connect_errno($connection)) {
             printf("Connect failed: %s\n", mysqli_connect_error());
@@ -329,7 +329,7 @@
      */    
     
     function select_prepared_userLogin_transaction($valueToFind) {
-        $connection = selectConnectionString(null);
+        $connection = selectConnectionString('../');
         /* check connection */
         if (mysqli_connect_errno($connection)) {
             printf("Connect failed: %s\n", mysqli_connect_error());

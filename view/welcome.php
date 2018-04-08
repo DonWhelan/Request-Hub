@@ -1,7 +1,7 @@
 
 <?php
     session_start();
-    include('includes/connectionStrings.php');
+    include('../model/connectionStrings.php');
     if($_SESSION['user'] != null){
         if($_SESSION['browser'] != $_SERVER['HTTP_USER_AGENT'] || $_SESSION['ip'] != get_client_ip_env() || $_COOKIE['cookieId'] != $_SESSION['cookieId']) {
             header("Location: index.php");
@@ -15,10 +15,10 @@
   <title>Upload your files</title>
 </head>
 <body>
-    <a href="logout.php">logout</a>
+    <a href="../controler/logout.php">logout</a>
     <br>
     upload view photo
-    <form enctype="multipart/form-data" action="upload.php" method="POST">
+    <form enctype="multipart/form-data" action="../fileIO/upload.php" method="POST">
         <input type="file" name="uploaded_file"></input><br />
         <input type="submit" value="Upload"></input>
     </form>
@@ -36,16 +36,17 @@
     <hr>
     <br>
     view photo<br>
+    <img src="../fileIO/view_image.php?file=sheild-1.png" /><br>
     <?php
-        $result = select_sqli(null,"SELECT * FROM images");
+        $result = select_sqli('../',"SELECT * FROM images");
         while ($row = mysqli_fetch_assoc($result)) {
     ?>
         <!--<img src="download.php?img=<?php //echo $row['filename']?>" /><br>-->
         
         
-        <!--<img src="view_image.php?file=<?php //echo $row['filename']?>" /><br>-->
         
-        <a href="download.php?file=<?php echo $row['filename']?>"download><button>download <?php echo $row['filename']?> image</button></a>
+        
+        <a href="../fileIO/download.php?file=<?php echo $row['filename']?>"download><button>download <?php echo $row['filename']?> image</button></a>
 
       
         

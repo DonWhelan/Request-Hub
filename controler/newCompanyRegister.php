@@ -1,7 +1,7 @@
 <?php
 
     session_start();
-    include("includes/connectionStrings.php");
+    include("model/connectionStrings.php");
     
     /*
      * --------------------- Creats home page for company and validated newCompanyForm.php form --------------------------------

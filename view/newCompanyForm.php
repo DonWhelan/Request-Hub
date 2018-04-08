@@ -19,7 +19,7 @@
 <body class="text-center">
 
     <?php
-		include("includes/pageIncludes/TopNav.php");
+		include("../includes/pageIncludes/TopNav.php");
 	?>
 	
     <div class="container">
@@ -35,7 +35,7 @@
             </div>
             <div class="col-sm-4">
                 <form action="newCompanyRegister.php" method="post" name="Login_Form" class="form-signin">
-                    <img class="mb-4" src="assets/img/icons/services-1.png" alt="" width="72" height="72">
+                    <img class="mb-4" src="../assets/img/icons/services-1.png" alt="" width="72" height="72">
                     <h1 class="h3 mb-3 font-weight-normal">Company details</h1>
                     <input type="text" class="form-control" name="companyName" placeholder="Company name" required="" />
                     <input type="text" class="form-control" name="address" placeholder="Address" required="" />

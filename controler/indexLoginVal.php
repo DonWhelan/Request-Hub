@@ -17,7 +17,7 @@
      * ---------------------------------------------------------------------------------------------------------------------
      */
   
-    include('includes/connectionStrings.php');
+    include('../model/connectionStrings.php');
     
     //boolean variable used to controle access to the SQL query 
     $passedRegex = TRUE;
@@ -45,7 +45,7 @@
 
     $subjectUsername = stripslashes(trim($postUsername));
     if (preg_match ('%^[A-Za-z0-9\.\'\-!_]{1,30}$%',$subjectUsername)) {
-        $formusername = escape_data(null,$subjectUsername);
+        $formusername = escape_data("../",$subjectUsername);
     } else {
         //If criteria is not met $passedRegex is set to false so the $formusername will not be sent to the SQL server
         $passedRegex = FALSE;
@@ -56,7 +56,7 @@
     // $subjectPassword = stripslashes(trim($postPassword));
     $subjectPassword = $postPassword;
     if (preg_match ('%^[A-Za-z0-9\.\'\-!_]{1,30}$%',$subjectPassword)) {
-        $formpassword = escape_data(null,$subjectPassword);
+        $formpassword = escape_data('../',$subjectPassword);
     } else {
         $passedRegex = FALSE;
         //***header("Location: ../failedLogin.php?char");
@@ -126,7 +126,7 @@
                 $dbUsername = $resultArray["username"];
                 $dbPassword = $resultArray["password"];
                 $dbSalt = $resultArray["salt"];
-                include("../pem/pepper.php");
+                include("../../pem/pepper.php");
                 // add salt and pepper
                 $password_withSaltAndPepper = pepper.$formpassword.$dbSalt;
                 // here the users password is verified from the originally hashed one from the db
@@ -144,7 +144,7 @@
                     //cookies expires within a hour, has a specified path, specifieddomain, are secure flagged, and has HTTP Only flagged
                     setcookie('cookieId', $randomID, time()+3600, "/", "request-hub.com", 1, 1);
  
-                    header("Location: welcome.php");
+                    header("Location: ../view/welcome.php");
                     exit();
                 }else{
                     echo "no match pw";

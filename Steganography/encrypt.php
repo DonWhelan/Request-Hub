@@ -1,14 +1,14 @@
 <?php 
     session_start();
-    include('../includes/connectionStrings.php');
+    include('../model/connectionStrings.php');
     include('../includes/mcrypt.php');
     // 1 - Authenticated user through session managment
     if($_SESSION['user'] != null){
         if($_SESSION['browser'] != $_SERVER['HTTP_USER_AGENT'] || $_SESSION['ip'] != get_client_ip_env() || $_COOKIE['cookieId'] != $_SESSION['cookieId']) {
-            header("Location: index.php");
+            header("Location: ../index.php");
         }
     }else{
-        header("Location: index.php");
+        header("Location: ../index.php");
     }
     
     /* 
@@ -92,6 +92,6 @@
         unlink($fileName);
         rename('new.png', $fileName);
         // 16- sets header back to download.php
-        header("location: ../download.php?returnedFile=$fileName");
+        header("location: ../fileIO/download.php?returnedFile=$fileName");
     }
 ?>

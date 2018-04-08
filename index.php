@@ -13,7 +13,7 @@
 
     <!--navbar-->
     <?php
-		include("includes/pageIncludes/TopNav.php");
+		include("includes/pageIncludes/indexTopNav.php");
 	?>
 
         <!-- filler -->
