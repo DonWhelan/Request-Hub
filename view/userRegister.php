@@ -1,13 +1,14 @@
-<!doctype html>
+<?php
+    session_start();
+    include('../model/connectionStrings.php');
+    //include('../controler/sessionManagment/session.php');
+?>
 <html lang="en">
 
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-    <meta name="description" content="">
-    <meta name="author" content="">
-
-    <title>Signin Template for Bootstrap</title>
+    <?php include("../includes/pageIncludes/head-1.php");?>
 
     <!-- Bootstrap core CSS -->
     <link href="../style/bootstrap-4.0.0-dist/css/bootstrap.min.css" rel="stylesheet">

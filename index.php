@@ -4,6 +4,7 @@
 <head>
 
     <?php
+    session_start();
 		include("includes/pageIncludes/head.php");
 	?>
 

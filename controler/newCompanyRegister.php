@@ -1,10 +1,13 @@
 <?php
 
     session_start();
-    include("model/connectionStrings.php");
+    include("../model/selectModel.php");
+    include("../model/insertModel_CompanyReg.php");
+    include("../model/updateModel_CompanyReg.php");
+    selectConnectionString("../");
     
     /*
-     * --------------------- Creats home page for company and validated newCompanyForm.php form --------------------------------
+     * --------------------- Creates home page for company and validated newCompanyForm.php form --------------------------------
      * - 
      * -------------------------------------------------------------------------------------------------------------------------
      */
@@ -14,7 +17,7 @@
      *  We use a custom regular expression for each field as the criteria for each field is different
      *  We run the text through trim() to remove unnessesry whitespace and then stripslashes() to unquote quoted strings.
      *  We use preg_match() to search the text, while validating it using regular expressions
-     *  The text is then run through the the escape_data() function *notes in includes/connect.php
+     *  The text is then run through the the escape_data() function
      */
         
     //boolean variable used to trigger the SQL query
@@ -38,9 +41,9 @@
         exit();
     }
     
-    $subjectCountry = stripslashes(trim($UNTRUSTED_cn));
-    if (preg_match ('%^[A-Za-z0-9\.\' \-!_]{2,20}$%',$subjectCountry)) {
-        $cleanedCountryfromForm = escape_data(null,$subjectCountry);
+    $subjectName = stripslashes(trim($UNTRUSTED_cn));
+    if (preg_match ('%^[A-Za-z0-9\.\' \-!_]{2,20}$%',$subjectName)) {
+        $cleanedNamefromForm = escape_data("../",$subjectName);
     } else {
         //If criteria is not met $passedRegex is set to false so the query connection will not open
         $passedRegex = FALSE;
@@ -51,7 +54,7 @@
     
     $subjectAddress = stripslashes(trim($UNTRUSTED_ad));
     if (preg_match ('%^[A-za-z0-9\.\' \-!_&@$~]{2,20}$%', $subjectAddress)) {
-        $cleanedAddressfromForm = escape_data(null,$subjectAddress);
+        $cleanedAddressfromForm = escape_data("../",$subjectAddress);
     } else {
         $passedRegex = FALSE;
         header("Location: newCompanyForm.php?ad");
@@ -60,7 +63,7 @@
     
     $subjectAddress2 = stripslashes(trim($UNTRUSTED_ad2));
     if (preg_match ('%^[A-za-z0-9\.\' \-!_&@$~]{2,20}$%', $subjectAddress2)) {
-        $cleanedAddress2fromForm = escape_data(null,$subjectAddress2);
+        $cleanedAddress2fromForm = escape_data("../",$subjectAddress2);
     } else {
         $passedRegex = FALSE;
         header("Location: newCompanyForm.php?ad2");
@@ -69,7 +72,7 @@
     
     $subjectPostcode = stripslashes(trim($UNTRUSTED_pc));
     if (preg_match ('%^[A-za-z0-9\.\' \-!_&@.$~]{2,30}$%', $subjectPostcode)) {
-        $cleanedPoastcodefromForm = escape_data(null,$subjectPostcode);
+        $cleanedPoastcodefromForm = escape_data("../",$subjectPostcode);
     } else {
         $passedRegex = FALSE;
         header("Location: newCompanyForm.php?pc");
@@ -78,7 +81,7 @@
     
     $subjectCountry = stripslashes(trim($UNTRUSTED_cn));
     if (preg_match ('%^[A-za-z0-9\.\' \-!_&@.$~]{2,30}$%', $subjectCountry)) {
-        $cleanedCountryfromForm = escape_data(null,$subjectCountry);
+        $cleanedCountryfromForm = escape_data("../",$subjectCountry);
     } else {
         $passedRegex = FALSE;
         header("Location: newCompanyForm.php?cn");
@@ -92,9 +95,55 @@
     
    if($passedRegex){
        
-        echo "passed";
+        /*
+         * We have created a view of the users table called userCompanyUpdateView. It only has access to username and company colums,
+         * 
+         * We also see if the user has been flagged as untrusted
+         * if they are trusted we run a query and check the results and log annomalys
+         * if they are intrusted we start a transaction before each query, check results and roll back if the result is unexpected
+         */  
+         
+        if(isset($_SESSION['unTrustedUser'])){
+            insert_prepared_companyUploadTransaction("../",$cleanedNamefromForm,$cleanedAddressfromForm,$cleanedAddress2fromForm,$cleanedPoastcodefromForm,$cleanedCountryfromForm,1);
+            update_prepared_SetCompanyToUserTransaction("../", $_SESSION['user'], $cleanedNamefromForm,1);
+        }else{
+            // INSERT INTO company (name, address, address2, postcode, country) VALUES (?,?,?,?,?)"
+            if(!insert_prepared_companyUpload("../",$cleanedNamefromForm,$cleanedAddressfromForm,$cleanedAddress2fromForm,$cleanedPoastcodefromForm,$cleanedCountryfromForm,1)){
+                // if unexpected results untrust user
+                $_SESSION['unTrustedUser'] = true;
+            }
+            // "UPDATE users SET company = ? WHERE username = ?"
+            if(update_prepared_SetCompanyToUserTransaction("../", $_SESSION['user'], $cleanedNamefromForm,1)){
+                // if unexpected results untrust user
+                $_SESSION['unTrustedUser'] = true;
+            }
+        }
+        
+        $_SESSION['company'] = $cleanedNamefromForm;
+        $contents = file_get_contents("../view/vendor/vendorTemplate.php");
+        $file = $cleanedNamefromForm.".php";
+        $path = "../view/vendor/";
+        $filepath = $path.$file;
+        file_put_contents($filepath,$contents);
+        chmod($filepath, 0666); 
+        
+        header('location: '.$filepath);
+        
+   }else{
     
-   }
+        /*
+         * the regex on the clientside in JavaScript is the same as the regex on the serverside in PHP
+         * if user input fails the regex on the server side it would mean the regex on the client side may have been altered to allow other charicters through
+         * this may be a dilberate move by a attacker to introduce potentialy harmful charicters, scripts or querys to the server side
+         * if if $passedRegex is false we do not open a connection to the DB
+         * we run log.php which records user input, the server and client data and notifies info.pixly
+         * we then redirect the user to index.php
+         */
+         
+        //include("../logs/logs.php");
+        //header("Location: ../view/userRegister.php?error");
+    
+    }
 
 
 ?>

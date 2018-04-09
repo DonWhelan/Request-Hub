@@ -1,4 +1,9 @@
-<!doctype html>
+<?php
+    session_start();
+    include('../model/connectionStrings.php');
+    //include('../controler/sessionManagment/session.php');   
+    
+?>
 <html lang="en">
 
 <head>
@@ -34,7 +39,7 @@
             <div class="col-sm-4">
             </div>
             <div class="col-sm-4">
-                <form action="newCompanyRegister.php" method="post" name="Login_Form" class="form-signin">
+                <form action="../controler/newCompanyRegister.php" method="post" name="Login_Form" class="form-signin">
                     <img class="mb-4" src="../assets/img/icons/services-1.png" alt="" width="72" height="72">
                     <h1 class="h3 mb-3 font-weight-normal">Company details</h1>
                     <input type="text" class="form-control" name="companyName" placeholder="Company name" required="" />

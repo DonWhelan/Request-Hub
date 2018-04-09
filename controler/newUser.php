@@ -53,7 +53,7 @@
     }
     
     $subjectUsername = stripslashes(trim($un));
-    if (preg_match ('%^[A-Za-z0-9\.\' \-!_]{3,20}$%',$subjectUsername)) {
+    if (preg_match ('%^[A-Za-z0-9\.\' \-!_]{1,20}$%',$subjectUsername)) {
         $username = escape_data('../',$subjectUsername);
     } else {
         //If criteria is not met $passedRegex is set to false so the query connection will not open
@@ -64,7 +64,7 @@
     }
     
     $subjectPassword = stripslashes(trim($pw));
-    if (preg_match ('%^[A-za-z0-9\.\' \-!_&@$~]{3,20}$%', $subjectPassword)) {
+    if (preg_match ('%^[A-za-z0-9\.\' \-!_&@$~]{1,20}$%', $subjectPassword)) {
         $password = escape_data('../',$subjectPassword);
     } else {
         $passedRegex = FALSE;
@@ -73,7 +73,7 @@
     }
     
     $subjectPasswordm = stripslashes(trim($pwm));
-    if (preg_match ('%^[A-za-z0-9\.\' \-!_&@$~]{3,20}$%', $subjectPasswordm)) {
+    if (preg_match ('%^[A-za-z0-9\.\' \-!_&@$~]{1,20}$%', $subjectPasswordm)) {
         $passwordm = escape_data('../',$subjectPasswordm);
     } else {
         $passedRegex = FALSE;
@@ -82,7 +82,7 @@
     }
     
     $subjectEmail = stripslashes(trim($em));
-    if (preg_match ('%^[A-za-z0-9\.\' \-!_&@.$~]{3,30}$%', $subjectEmail)) {
+    if (preg_match ('%^[A-za-z0-9\.\' \-!_&@.$~]{1,30}$%', $subjectEmail)) {
         $email = escape_data('../',$subjectEmail);
     } else {
         $passedRegex = FALSE;
@@ -184,7 +184,7 @@
             //echo "hello friends";
             insert_sqli('../',"INSERT INTO users (username, password, email, salt) VALUES ('$username','$userpasswordhashed','$email','$salt')");
             
-            $_SESSION['user'] = $dbUsername;
+            $_SESSION['user'] = $username;
             // adds the users IP address to the session, this will be used for validation at different stages to stop session hijacking - get_client_ip_env() included from includes/connect.php
             $_SESSION['ip'] = get_client_ip_env();
             // adds users browser details

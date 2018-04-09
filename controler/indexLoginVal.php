@@ -16,8 +16,8 @@
      * - Finally we direct the user to index.php
      * ---------------------------------------------------------------------------------------------------------------------
      */
-  
-    include('../model/connectionStrings.php');
+    include('../model/selectModel.php');
+    include('../model/selectModel_Login.php');
     
     //boolean variable used to controle access to the SQL query 
     $passedRegex = TRUE;
@@ -88,6 +88,10 @@
             $resultArray = select_prepared_userLogin($formusername);
         } 
         
+        echo '<pre>';
+        print_r($resultArray);
+        echo '</pre>'; 
+        
         if(empty($resultArray)){
             echo "no such user";
             exit;
@@ -133,6 +137,7 @@
                 if($formusername == $dbUsername && password_verify($password_withSaltAndPepper, $dbPassword)){
                     echo "signed in";
                     $_SESSION['user'] = $dbUsername;
+                    $_SESSION['company'] = $resultArray["company"];
                     // adds the users IP address to the session, this will be used for validation at different stages to stop session hijacking - get_client_ip_env() included from includes/connect.php
                     $_SESSION['ip'] = get_client_ip_env();
                     // adds users browser details
@@ -144,7 +149,7 @@
                     //cookies expires within a hour, has a specified path, specifieddomain, are secure flagged, and has HTTP Only flagged
                     setcookie('cookieId', $randomID, time()+3600, "/", "request-hub.com", 1, 1);
  
-                    header("Location: ../view/welcome.php");
+                    header("Location: ../view/vendor/".$_SESSION['company'].".php");
                     exit();
                 }else{
                     echo "no match pw";

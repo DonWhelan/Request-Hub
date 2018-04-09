@@ -1,20 +1,16 @@
 
 <?php
-    session_start();
     include('../model/connectionStrings.php');
-    if($_SESSION['user'] != null){
-        if($_SESSION['browser'] != $_SERVER['HTTP_USER_AGENT'] || $_SESSION['ip'] != get_client_ip_env() || $_COOKIE['cookieId'] != $_SESSION['cookieId']) {
-            header("Location: index.php");
-        }
-    }else{
-        header("Location: index.php");
-    }    
+    include('../controler/sessionManagment/session.php');
+
 ?>
 <html>
 <head>
-  <title>Upload your files</title>
+<?php include("../includes/pageIncludes/head-1.php");?>
 </head>
 <body>
+    <?php include("../includes/pageIncludes/TopNav.php");?>
+   
     <a href="../controler/logout.php">logout</a>
     <br>
     upload view photo

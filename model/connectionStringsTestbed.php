@@ -3,11 +3,12 @@
     //ini_set('display_errors', 'On');
     // connectionStringsTestbed
 /* ---------------------  SELECT  ---------------------------------*/
-    // ------- select_sqli()
-    // $result = select_sqli("SELECT * FROM userLogonView");
+    //------- select_sqli()
+    // $result = select_sqli("../","SELECT * FROM userLogonView");
     // while ($row = mysqli_fetch_assoc($result)) {
-    //     echo $row['username'] . "<br>";
+    //     echo $row['company'] . "<br>";
     // }
+    // var_dump($result);
     //
     // ------- select_sqliLog()
     // $result = select_sqliLog("SELECT * FROM testtable where value=101", 2);
