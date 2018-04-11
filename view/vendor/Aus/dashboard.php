@@ -1,26 +1,28 @@
 <?php
-      session_start();
-      include("../../model/selectModel.php");
-      include('../../controler/sessionManagment/session.php');
+    session_start();
+    include('../../../model/selectModel.php');
+    include('../../../controler/sessionManagment/session-1.php');
+
 ?>
+
 <html lang="en">
   <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
     <!-- Bootstrap core CSS -->
-    <link href="../../../../dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="../../../../../dist/css/bootstrap.min.css" rel="stylesheet">
     <!-- Custom styles for this template -->
     <link href="dashboard.css" rel="stylesheet">
-    <?php include('../../includes/pageIncludes/head-2.php');?>
-    <link href="../../style/sidenav.css" rel="stylesheet">
+    <?php include('../../../includes/pageIncludes/head-3.php');?>
+    <link href="../../../style/sidenav.css" rel="stylesheet">
   </head>
 
   <body>
     <!--referance: https://getbootstrap.com/docs/4.0/examples/-->
     <!-- ======================= top nav bar =========================== -->
     <nav class="navbar navbar-dark sticky-top bg-dark flex-md-nowrap p-0">
-      <a class="navbar-brand col-sm-3 col-md-2 mr-1" href="#">Request Hub <img src="../../images/icon.png" alt="" style="height:25px"></a>
-      <a href="../../controler/logout.php"><button class="btn btn-outline-info my-sm-0" type="submit">Log out</button></a>
+      <a class="navbar-brand col-sm-3 col-md-2 mr-1" href="#">Request Hub <img src="../../../images/icon.png" alt="" style="height:25px"></a>
+      <a href="../../../controler/logout.php"><button class="btn btn-outline-info my-sm-0" type="submit">Log out</button></a>
     </nav>
     
     <div class="container-fluid">
@@ -111,7 +113,7 @@
         <!-- ======================= dashboard =========================== --> 
         <main role="main" class="col-md-9 ml-sm-auto col-lg-10 pt-3 px-4">
           <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pb-2 mb-3 border-bottom">
-            <h1 class="h2">Dashboard</h1>
+            <h1 class="h2">Doug's a fat cunt</h1>
             <div class="btn-toolbar mb-2 mb-md-0">
               <div class="btn-group mr-2">
                 <button class="btn btn-sm btn-outline-secondary">Share</button>

@@ -1,7 +1,8 @@
 
 <?php
+    session_start();
     include('../model/connectionStrings.php');
-    include('../controler/sessionManagment/session.php');
+    //include('../controler/sessionManagment/session.php');
 
 ?>
 <html>

@@ -2,7 +2,7 @@
     session_start();
     include('../../../model/selectModel.php');
     include('../../../controler/sessionManagment/session-1.php');
-
+    include('../../../controler/activeHighlightSidenav.php');
 ?>
 
 <html lang="en">
@@ -15,6 +15,12 @@
     <link href="dashboard.css" rel="stylesheet">
     <?php include('../../../includes/pageIncludes/head-3.php');?>
     <link href="../../../style/sidenav.css" rel="stylesheet">
+    <script src="https://unpkg.com/feather-icons/dist/feather.min.js"></script>
+    
+    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.0.9/css/all.css" integrity="sha384-5SOiIsAziJl6AWe0HWRKTXlfcSHKmYV4RBF18PPJ173Kzn7jzMyFuTtk8JA7QQG1" crossorigin="anonymous">
+    <link href="https://colorlib.com/polygon/elaadmin/css/helper.css" rel="stylesheet">
+    <!--<link href="https://colorlib.com/polygon/elaadmin/css/style.css" rel="stylesheet">-->
+    <link href="../../../assets/css/form-elements.css" rel="stylesheet">
   </head>
 
   <body>
@@ -32,43 +38,43 @@
           <div class="sidebar-sticky">
             <ul class="nav flex-column">
               <li class="nav-item">
-                <a class="nav-link active" href="#">
+                <a class="nav-link <?php echo $dashboardActive; ?>" href="dashboard.php">
                   <span data-feather="home"></span>
-                  Dashboard <span class="sr-only">(current)</span>
+                  Dashboard 
                 </a>
               </li>
               <li class="nav-item">
-                <a class="nav-link" href="#">
+                <a class="nav-link <?php echo $inboxActive; ?>" href="inbox.php">
                   <span data-feather="inbox"></span>
                   Inbox
                 </a>
               </li>
               <li class="nav-item">
-                <a class="nav-link" href="#">
+                <a class="nav-link <?php echo $requestsActive; ?>" href="requests.php">
                   <span data-feather="shopping-cart"></span>
                   Requets
                 </a>
               </li>
               <li class="nav-item">
-                <a class="nav-link" href="#">
+                <a class="nav-link <?php echo $cAndEActive; ?>" href="create-edit.php">
                   <span data-feather="edit"></span>
-                  Create/Edit
+                  Create/Edit<span class="sr-only">(current)</span>
                 </a>
               </li>
               <li class="nav-item">
-                <a class="nav-link" href="#">
+                <a class="nav-link <?php echo $customersActive; ?>" href="customers.php">
                   <span data-feather="users"></span>
                   Customers
                 </a>
               </li>
               <li class="nav-item">
-                <a class="nav-link" href="#">
+                <a class="nav-link <?php echo $teamsActive; ?>" href="team.php">
                   <span data-feather="layers"></span>
                   Teams
                 </a>
               </li>
               <li class="nav-item">
-                <a class="nav-link" href="#">
+                <a class="nav-link <?php echo $reposrtsActive; ?>" href="reports.php">
                   <span data-feather="bar-chart-2"></span>
                   Reports
                 </a>
@@ -109,74 +115,3 @@
             </ul>
           </div>
         </nav>
-
-        <!-- ======================= dashboard =========================== --> 
-        <main role="main" class="col-md-9 ml-sm-auto col-lg-10 pt-3 px-4">
-          <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pb-2 mb-3 border-bottom">
-            <h1 class="h2"><?php echo $_SESSION['company']; ?></h1>
-            <div class="btn-toolbar mb-2 mb-md-0">
-              <div class="btn-group mr-2">
-                <button class="btn btn-sm btn-outline-secondary">Share</button>
-                <button class="btn btn-sm btn-outline-secondary">Export</button>
-              </div>
-              <button class="btn btn-sm btn-outline-secondary dropdown-toggle">
-                <span data-feather="calendar"></span>
-                This week
-              </button>
-            </div>
-          </div>
-
-          <canvas class="my-4" id="myChart" width="900" height="380"></canvas>
-
-         
-        </main>
-      </div>
-    </div>
-
-    <!-- Bootstrap core JavaScript
-    ================================================== -->
-    <!-- Placed at the end of the document so the pages load faster -->
-    <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous"></script>
-    <script>window.jQuery || document.write('<script src="../../../../assets/js/vendor/jquery-slim.min.js"><\/script>')</script>
-    <script src="../../../../assets/js/vendor/popper.min.js"></script>
-    <script src="../../../../dist/js/bootstrap.min.js"></script>
-
-    <!-- Icons -->
-    <script src="https://unpkg.com/feather-icons/dist/feather.min.js"></script>
-    <script>
-      feather.replace()
-    </script>
-
-    <!-- Graphs -->
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.7.1/Chart.min.js"></script>
-    <script>
-      var ctx = document.getElementById("myChart");
-      var myChart = new Chart(ctx, {
-        type: 'line',
-        data: {
-          labels: ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"],
-          datasets: [{
-            data: [15339, 21345, 18483, 24003, 23489, 24092, 12034],
-            lineTension: 0,
-            backgroundColor: 'transparent',
-            borderColor: '#007bff',
-            borderWidth: 4,
-            pointBackgroundColor: '#007bff'
-          }]
-        },
-        options: {
-          scales: {
-            yAxes: [{
-              ticks: {
-                beginAtZero: false
-              }
-            }]
-          },
-          legend: {
-            display: false,
-          }
-        }
-      });
-    </script>
-  </body>
-</html>

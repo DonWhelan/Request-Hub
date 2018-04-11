@@ -149,7 +149,7 @@
                     //cookies expires within a hour, has a specified path, specifieddomain, are secure flagged, and has HTTP Only flagged
                     setcookie('cookieId', $randomID, time()+3600, "/", "request-hub.com", 1, 1);
  
-                    header("Location: ../view/vendor/".$_SESSION['company'].".php");
+                    header("Location: ../view/vendor/".$_SESSION['company']."/dashboard.php");
                     exit();
                 }else{
                     echo "no match pw";

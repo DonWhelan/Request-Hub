@@ -119,13 +119,16 @@
             }
         }
         
+        
         $_SESSION['company'] = $cleanedNamefromForm;
         $contents = file_get_contents("../view/vendor/vendorTemplate.php");
-        $file = $cleanedNamefromForm.".php";
-        $path = "../view/vendor/";
-        $filepath = $path.$file;
+        $file = "dashboard.php";
+        $path = "../view/vendor/".$_SESSION['company'];
+        mkdir($path);
+        chmod($path, 0777); 
+        $filepath = $path."/".$file;
         file_put_contents($filepath,$contents);
-        chmod($filepath, 0666); 
+        chmod($filepath, 0777); 
         
         header('location: '.$filepath);
         
