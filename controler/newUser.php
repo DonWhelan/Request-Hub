@@ -1,6 +1,6 @@
 <?php
     /*
-     * -------------------------In createUser.php we create new user profiles----------------------------------------------------
+     * -------------------------In newuser.php we create new user profiles----------------------------------------------------
      * - user input is sanitised 
      * - passwords are hashed 
      * - Check if the user name is in the 'users' table on the the DB, and check the expected results from query to the DB

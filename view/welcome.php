@@ -8,6 +8,8 @@
 <html>
 <head>
 <?php include("../includes/pageIncludes/head-1.php");?>
+<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+
 </head>
 <body>
     <?php include("../includes/pageIncludes/TopNav.php");?>
@@ -40,7 +42,7 @@
     ?>
         <!--<img src="download.php?img=<?php //echo $row['filename']?>" /><br>-->
         
-        
+
         
         
         <a href="../fileIO/download.php?file=<?php echo $row['filename']?>"download><button>download <?php echo $row['filename']?> image</button></a>
@@ -50,6 +52,12 @@
     <?php
         }
     ?>
+    
+    
+            <label class="custom-file">
+  <input type="file" id="file" class="custom-file-input">
+  <span class="custom-file-control"></span>
+</label>
 
 </body>
 </html>
