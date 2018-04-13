@@ -14,18 +14,19 @@
         $connection = mysqli_connect(sHOST, sUSER, sPASS);
         if (!$connection) {
             trigger_error("Could not reach database!<br/>");
-            include("logs/logsMail-1dir.php");
+            error_log("Could not connect! select_prepared_userLogin(),", 0);
             exit();
         }
         $db_selected = mysqli_select_db($connection, sDB);
         if (!$db_selected) {
             trigger_error("Could not reach database!<br/>");
-            include("logs/logsMail-1dir.php");
+            error_log("Could not connect! select_prepared_userLogin(),", 0);
             exit();
         } 
         
         /* check connection */
         if (mysqli_connect_errno($connection)) {
+            error_log("Could not connect! select_prepared_userLogin(),", 0);
             printf("Connect failed: %s\n", mysqli_connect_error());
             exit();
         }
@@ -78,17 +79,18 @@
         $connection = mysqli_connect(sHOST, sUSER, sPASS);
         if (!$connection) {
             trigger_error("Could not reach database!<br/>");
-            include("logs/logsMail-1dir.php");
+            error_log("Could not connect! select_prepared_userLogin(),", 0);
             exit();
         }
         $db_selected = mysqli_select_db($connection, sDB);
         if (!$db_selected) {
             trigger_error("Could not reach database!<br/>");
-            include("logs/logsMail-1dir.php");
+            error_log("Could not connect! select_prepared_userLogin(),", 0);
             exit();
         }
         /* check connection */
         if (mysqli_connect_errno($connection)) {
+            error_log("Could not connect! select_prepared_userLogin(),", 0);
             printf("Connect failed: %s\n", mysqli_connect_error());
             exit();
         }
@@ -114,6 +116,7 @@
             $numrows = $stmt->num_rows;
             $array["numRows"] = $numrows;
             if($numrows > 1){
+                error_log("unexpected result! select_prepared_userLogin(),", 0);
                 mysqli_query($connection,"rollback");
             }else{
                 mysqli_query($connection,"commit");

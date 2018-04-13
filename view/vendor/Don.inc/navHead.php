@@ -57,15 +57,9 @@
                 </a>
               </li>
               <li class="nav-item">
-                <a class="nav-link <?php echo $requestsActive; ?>" href="requests.php">
-                  <span data-feather="shopping-cart"></span>
-                  Requets
-                </a>
-              </li>
-              <li class="nav-item">
-                <a class="nav-link <?php echo $cAndEActive; ?>" href="create-edit.php">
+                <a class="nav-link <?php echo $cAndEActive; ?>" href="request.php">
                   <span data-feather="edit"></span>
-                  Create/Edit<span class="sr-only">(current)</span>
+                  Requests<span class="sr-only">(current)</span>
                 </a>
               </li>
               <li class="nav-item">

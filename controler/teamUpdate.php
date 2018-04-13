@@ -39,6 +39,7 @@
 
 
     if(empty($UNTRUSTED_tn) || empty($UNTRUSTED_rl) || empty($UNTRUSTED_id)){
+        error_log("failed regex:".$_SESSION['user']."-".$_SESSION['ip'], 0);
         $passedRegex = FALSE;
         header("Location: ../view/vendor/Don.inc/team.php?message=teamError");
         exit();
@@ -48,6 +49,7 @@
     if (preg_match ('%^[A-Za-z0-9\.\' \-!_]{2,20}$%',$subjectName)) {
         $cleanedNamefromForm = escape_data("../",$subjectName);
     } else {
+        error_log("failed regex:".$_SESSION['user']."-".$_SESSION['ip'], 0);
         //If criteria is not met $passedRegex is set to false so the query connection will not open
         $passedRegex = FALSE;
         //we redirect the user back to newUser.php but add info to thr URL yo we can read why the user has been sent back and display the correct error messege
@@ -59,6 +61,7 @@
     if (preg_match ('%^[A-Za-z0-9\.\' \-!_]{2,20}$%',$subjectName)) {
         $cleanedRolefromForm = escape_data("../",$subjectRole);
     } else {
+        error_log("failed regex:".$_SESSION['user']."-".$_SESSION['ip'], 0);
         $passedRegex = FALSE;
         header("Location: ../view/vendor/Don.inc/team.php?message=teamError");
         exit();
@@ -68,6 +71,7 @@
     if (preg_match ('%^[A-Za-z0-9\.\' \-!_]{1,20}$%',$subjectID)) {
         $cleanedIDfromForm = escape_data("../",$subjectID);
     } else {
+        error_log("failed regex:".$_SESSION['user']."-".$_SESSION['ip'], 0);
         $passedRegex = FALSE;
         header("Location: ../view/vendor/Don.inc/team.php?message=teamError");
         exit();
@@ -90,8 +94,9 @@
             update_prepared_updateTeam_Transaction("../",$cleanedIDfromForm,$cleanedNamefromForm,$cleanedRolefromForm,1);
         }else{
             // INSERT INTO company (name, address, address2, postcode, country) VALUES (?,?,?,?,?)"
-            if(update_prepared_updateTeam("../",$cleanedIDfromForm,$cleanedNamefromForm,$cleanedRolefromForm,1)){
+            if(!update_prepared_updateTeam("../",$cleanedIDfromForm,$cleanedNamefromForm,$cleanedRolefromForm,1)){
               // if unexpected results untrust user
+              error_log("user untrusted:".$_SESSION['user']."-".$_SESSION['ip'], 0);
                 $_SESSION['unTrustedUser'] = true;
             }
         }
@@ -109,7 +114,6 @@
          * we then redirect the user to index.php
          */
          
-        //include("../logs/logs.php");
         header("Location: ../view/vendor/Don.inc/team.php?message=teamError");
     
     }

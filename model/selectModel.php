@@ -7,13 +7,13 @@
         $connection = mysqli_connect(sHOST, sUSER, sPASS);
         if (!$connection) {
             trigger_error("Could not reach database!<br/>");
-            include("logs/logsMail-1dir.php");
+            error_log("could not connect! selectConnectionString(),", 0);
             exit();
         }
         $db_selected = mysqli_select_db($connection, sDB);
         if (!$db_selected) {
             trigger_error("Could not reach database!<br/>");
-            include("logs/logsMail-1dir.php");
+            error_log("could not connect! selectConnectionString(),", 0);
             exit();
         } 
         return $connection;
@@ -82,6 +82,7 @@
         $queryresult = mysqli_query($connection, $select_query); 
         if (! $queryresult){
             echo('Database error: ' . mysqli_error($connection));
+            error_log("unable to connect! select_sqli(),", 0);
             exit;
         }
         mysqli_close($connection);
@@ -102,7 +103,7 @@
             exit;
         }   
         if($numRows != $expectedResult){
-            include("logs/logsMail.php");
+            error_log("Unexpected result! select_sqliLog(),", 0);
         }
         mysqli_close($connection);
         return $queryresult;
@@ -122,7 +123,7 @@
             exit;
         }   
         if($numRows > $expectedResult){
-            include("logs/logsMail.php");
+            error_log("Unexpected result! select_sqliTransaction(),", 0);
         }
         mysqli_close($connection);
         
@@ -149,7 +150,7 @@
             exit;
         }   
         if($numRows != $expectedResult){
-            include("logs/logsMail.php");
+            error_log("Unexpected result! select_sqliTransaction(),", 0);
             mysqli_query($connection,"rollback");
         }else{
             mysqli_query($connection,"commit");

@@ -16,13 +16,13 @@
         $connection = mysqli_connect(uHOST, uUSER, uPASS);
         if (!$connection) {
             trigger_error("Could not reach database!<br/>");
-            //include("logs/logsMail-1dir.php");
+            error_log("Could not reach database! update_prepared_updateTeam(),", 0);
             exit();
         }
         $db_selected = mysqli_select_db($connection, uDB);
         if (!$db_selected) {
             trigger_error("Could not reach database!<br/>");
-            //include("logs/logsMail-1dir.php");
+            error_log("Could not reach database! mysqli_select_db(),", 0);
             exit();
         }
         // Check connection
@@ -32,15 +32,13 @@
         // "UPDATE users SET company = ?  WHERE username = ?
         $stmt = $connection->prepare("UPDATE Teams SET teamName = ?, role = ? WHERE uid = ?");
         $stmt->bind_param("ssi", $team, $role, $uid);
-        if($stmt->execute()){
-            echo "sucess <br>";
-        }else{
-            echo "failed run <br>";
+        if(!$stmt->execute()){
+            error_log("Could not reach database! update_prepared_updateTeam(),", 0);
         }
         $affectedRows = mysqli_stmt_affected_rows($stmt);
         // check expected result
         if($affectedRows != $expectedResult){
-            //include("logs/logsMail.php");
+            error_log("Unexpected DB result! update_prepared_updateTeam(),", 0);
             return false;
         }else{
             return true;
@@ -53,13 +51,13 @@
         $connection = mysqli_connect(uHOST, uUSER, uPASS);
         if (!$connection) {
             trigger_error("Could not reach database!<br/>");
-            //include("logs/logsMail-1dir.php");
+            error_log("Could not reach database! update_prepared_updateTeam_Transaction(),", 0);
             exit();
         }
         $db_selected = mysqli_select_db($connection, uDB);
         if (!$db_selected) {
             trigger_error("Could not reach database!<br/>");
-            //include("logs/logsMail-1dir.php");
+            error_log("Could not reach database! update_prepared_updateTeam_Transaction(),", 0);
             exit();
         }
         // Check connection
@@ -74,15 +72,13 @@
         // "UPDATE users SET company = ?  WHERE username = ?
         $stmt = $connection->prepare("UPDATE Teams SET teamName = ?, role = ? WHERE uid = ?");
         $stmt->bind_param("ssi", $team, $role, $uid);
-        if($stmt->execute()){
-            echo "sucess <br>";
-        }else{
-            echo "failed run <br>";
+        if(!$stmt->execute()){
+            error_log("Could not reach database! update_prepared_updateTeam_Transaction(),", 0);
         }
         $affectedRows = mysqli_stmt_affected_rows($stmt);
         // check expected result
         if($affectedRows != $expectedResult){
-            //include("logs/logsMail.php");
+            error_log("Unexpected DB result! update_prepared_updateTeam(),", 0);
             mysqli_query($connection,"rollback");
             return false;
         }else{

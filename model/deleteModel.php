@@ -8,13 +8,13 @@
         $connection = mysqli_connect(dHOST, dUSER, dPASS);
         if (!$connection) {
             trigger_error("Could not reach database!<br/>");
-            include("logs/logsMail-1dir.php");
+            error_log("Could not connect! deleteConnectionString(),", 0);
             exit();
         }
         $db_selected = mysqli_select_db($connection, dDB);
         if (!$db_selected) {
             trigger_error("Could not reach database!<br/>");
-            include("logs/logsMail-1dir.php");
+            error_log("Could not connect! deleteConnectionString(),", 0);
             exit();
         } 
         return $connection;
@@ -55,7 +55,7 @@
         
         if(($rowsBefore != ($rowsAfter + $expectedResult)) || ($affectedRows != $expectedResult)){
             if($affectedRows != 0){
-                include("logs/logsMail.php");
+                error_log("unexpected result! deleteConnectionString(),", 0);
             }    
         }
         mysqli_close($connection);
@@ -89,7 +89,7 @@
         
         if(($rowsBefore != ($rowsAfter + $expectedResult)) || ($affectedRows != $expectedResult)){
             if($affectedRows != 0){
-                include("logs/logsMail.php");
+                error_log("unexpected result! deleteConnectionStringTransaction(),", 0);
                 mysqli_query($connection,"rollback");
             }else{
                 mysqli_query($connection,"commit");

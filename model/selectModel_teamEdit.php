@@ -6,17 +6,18 @@
         $connection = mysqli_connect(sHOST, sUSER, sPASS);
         if (!$connection) {
             trigger_error("Could not reach database!<br/>");
-            include("logs/logsMail-1dir.php");
+            error_log("Could not connect! select_prepared_teamEdit(),", 0);
             exit();
         }
         $db_selected = mysqli_select_db($connection, sDB);
         if (!$db_selected) {
             trigger_error("Could not reach database!<br/>");
-            include("logs/logsMail-1dir.php");
+            error_log("Could not connect! select_prepared_teamEdit(),", 0);
             exit();
         }
         /* check connection */
         if (mysqli_connect_errno($connection)) {
+            error_log("Could not connect! select_prepared_teamEdit(),", 0);
             printf("Connect failed: %s\n", mysqli_connect_error());
             exit();
         }
@@ -49,17 +50,18 @@
         $connection = mysqli_connect(sHOST, sUSER, sPASS);
         if (!$connection) {
             trigger_error("Could not reach database!<br/>");
-            include("logs/logsMail-1dir.php");
+            error_log("Could not connect! select_prepared_teamEdit_byUID(),", 0);
             exit();
         }
         $db_selected = mysqli_select_db($connection, sDB);
         if (!$db_selected) {
             trigger_error("Could not reach database!<br/>");
-            include("logs/logsMail-1dir.php");
+            error_log("Could not connect! select_prepared_teamEdit_byUID(),", 0);
             exit();
         }
         /* check connection */
         if (mysqli_connect_errno($connection)) {
+            error_log("Could not connect! select_prepared_teamEdit_byUID(),", 0);
             printf("Connect failed: %s\n", mysqli_connect_error());
             exit();
         }
@@ -82,6 +84,7 @@
             return $array;
             mysqli_stmt_close($stmt);
         }else{
+            error_log("Could not retrive results! select_prepared_teamEdit_byUID(),", 0);
             return $array = ["teamName" => null, "role" => null];
         }
        mysqli_close($connection);

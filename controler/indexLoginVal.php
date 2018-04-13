@@ -32,6 +32,7 @@
   
     if(empty($postUsername) || empty($postPassword)){
         $passedRegex = FALSE;
+        error_log("failed regex:".$_SESSION['user']."-".$_SESSION['ip'], 0);
     }
     
     /*
@@ -80,6 +81,7 @@
          */  
         
         if(isset($_SESSION['unTrustedUser'])){
+            error_log("user untrusted:".$_SESSION['user']."-".$_SESSION['ip'], 0);
             echo "untrusted";
             //SELECT username, password FROM userLogonView WHERE username = '$formusername' LIMIT 1
             $resultArray = select_prepared_userLogin_transaction($formusername);
@@ -87,10 +89,7 @@
             // SELECT username, password FROM userLogonView WHERE username = '$formusername' LIMIT 1
             $resultArray = select_prepared_userLogin($formusername);
         } 
-        
-        echo '<pre>';
-        print_r($resultArray);
-        echo '</pre>'; 
+
         
         if(empty($resultArray)){
             echo "no such user";
@@ -119,7 +118,7 @@
             // which mean future querys will pass through transactions 
             $_SESSION['unTrustedUser'] = true;
             //logs a security file
-            //include("../logs/logsMail.php");
+            error_log("user untrusted:".$_SESSION['user']."-".$_SESSION['ip'], 0);
             //closed the sql connection
             mysql_close($connection);
             //redirects user index
@@ -175,7 +174,7 @@
          * we then redirect the user to failedLogin.php
          */
          
-         //include("../logs/logs.php");
+         error_log("user untrusted:".$_SESSION['user']."-".$_SESSION['ip'], 0);
          //***header("Location: ../failedLogin.php?error");
     }
 ?>  

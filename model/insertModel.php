@@ -7,13 +7,13 @@
         $connection = mysqli_connect(iHOST, iUSER, iPASS);
         if (!$connection) {
             trigger_error("Could not reach database!<br/>");
-            include("logs/logsMail-1dir.php");
+            error_log("could not connect! deleteConnectionString(),", 0);
             exit();
         }
         $db_selected = mysqli_select_db($connection, iDB);
         if (!$db_selected) {
             trigger_error("Could not reach database!<br/>");
-            include("logs/logsMail-1dir.php");
+            error_log("could not connect! deleteConnectionString(),", 0);
             exit();
         } 
         return $connection;

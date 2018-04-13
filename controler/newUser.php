@@ -42,12 +42,14 @@
      $em = $_POST['email'];
 
     if(empty($un) || empty($pw) || empty($pwm) || empty($em)){
+        error_log("failed regex:".$_SESSION['user']."-".$_SESSION['ip'], 0);
         $passedRegex = FALSE;
         header("Location: ../view/userRegister.php?un");
         exit();
     }
     
     if($pw != $pwm){
+        error_log("failed regex:".$_SESSION['user']."-".$_SESSION['ip'], 0);
        header("Location: ../view/userRegister.php?pw");
        exit();
     }
@@ -56,6 +58,7 @@
     if (preg_match ('%^[A-Za-z0-9\.\' \-!_]{1,20}$%',$subjectUsername)) {
         $username = escape_data('../',$subjectUsername);
     } else {
+        error_log("failed regex:".$_SESSION['user']."-".$_SESSION['ip'], 0);
         //If criteria is not met $passedRegex is set to false so the query connection will not open
         $passedRegex = FALSE;
         //we redirect the user back to newUser.php but add info to thr URL yo we can read why the user has been sent back and display the correct error messege
@@ -67,6 +70,7 @@
     if (preg_match ('%^[A-za-z0-9\.\' \-!_&@$~]{1,20}$%', $subjectPassword)) {
         $password = escape_data('../',$subjectPassword);
     } else {
+        error_log("failed regex:".$_SESSION['user']."-".$_SESSION['ip'], 0);
         $passedRegex = FALSE;
         header("Location: ../view/userRegister.php?pw");
         exit();
@@ -76,6 +80,7 @@
     if (preg_match ('%^[A-za-z0-9\.\' \-!_&@$~]{1,20}$%', $subjectPasswordm)) {
         $passwordm = escape_data('../',$subjectPasswordm);
     } else {
+        error_log("failed regex:".$_SESSION['user']."-".$_SESSION['ip'], 0);
         $passedRegex = FALSE;
         header("Location: ../view/userRegister.php?pw");
         exit();
@@ -85,6 +90,7 @@
     if (preg_match ('%^[A-za-z0-9\.\' \-!_&@.$~]{1,30}$%', $subjectEmail)) {
         $email = escape_data('../',$subjectEmail);
     } else {
+        error_log("failed regex:".$_SESSION['user']."-".$_SESSION['ip'], 0);
         $passedRegex = FALSE;
         header("Location: ../view/userRegister.php?em");
         exit();
@@ -129,7 +135,7 @@
         
         if($numRows > 1){
             //logs a security file
-            include("../logs/logsMail.php");
+            error_log("user untrusted:".$_SESSION['user']."-".$_SESSION['ip'], 0);
             //closed the sql connection
             mysql_close($connection);
             //redirects user index
@@ -210,7 +216,6 @@
          * we then redirect the user to index.php
          */
      
-        include("../logs/logs.php");
         header("Location: ../view/userRegister.php?error");
     }   
             

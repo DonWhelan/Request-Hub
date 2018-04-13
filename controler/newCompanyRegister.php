@@ -37,6 +37,7 @@
 
     if(empty($UNTRUSTED_cn) || empty($UNTRUSTED_ad) || empty($UNTRUSTED_pc) || empty($UNTRUSTED_cn)){
         $passedRegex = FALSE;
+        error_log("failed regex:".$_SESSION['user']."-".$_SESSION['ip'], 0);
         header("Location: newCompanyForm.php?mt");
         exit();
     }
@@ -47,6 +48,7 @@
     } else {
         //If criteria is not met $passedRegex is set to false so the query connection will not open
         $passedRegex = FALSE;
+        error_log("failed regex:".$_SESSION['user']."-".$_SESSION['ip'], 0);
         //we redirect the user back to newUser.php but add info to thr URL yo we can read why the user has been sent back and display the correct error messege
         header("Location: newCompanyForm.php?cn");
         exit();
@@ -56,6 +58,7 @@
     if (preg_match ('%^[A-za-z0-9\.\' \-!_&@$~]{2,20}$%', $subjectAddress)) {
         $cleanedAddressfromForm = escape_data("../",$subjectAddress);
     } else {
+        error_log("failed regex:".$_SESSION['user']."-".$_SESSION['ip'], 0);
         $passedRegex = FALSE;
         header("Location: newCompanyForm.php?ad");
         exit();
@@ -65,6 +68,7 @@
     if (preg_match ('%^[A-za-z0-9\.\' \-!_&@$~]{2,20}$%', $subjectAddress2)) {
         $cleanedAddress2fromForm = escape_data("../",$subjectAddress2);
     } else {
+        error_log("failed regex:".$_SESSION['user']."-".$_SESSION['ip'], 0);
         $passedRegex = FALSE;
         header("Location: newCompanyForm.php?ad2");
         exit();
@@ -74,6 +78,7 @@
     if (preg_match ('%^[A-za-z0-9\.\' \-!_&@.$~]{2,30}$%', $subjectPostcode)) {
         $cleanedPoastcodefromForm = escape_data("../",$subjectPostcode);
     } else {
+        error_log("failed regex:".$_SESSION['user']."-".$_SESSION['ip'], 0);
         $passedRegex = FALSE;
         header("Location: newCompanyForm.php?pc");
         exit();
@@ -83,6 +88,7 @@
     if (preg_match ('%^[A-za-z0-9\.\' \-!_&@.$~]{2,30}$%', $subjectCountry)) {
         $cleanedCountryfromForm = escape_data("../",$subjectCountry);
     } else {
+        error_log("failed regex:".$_SESSION['user']."-".$_SESSION['ip'], 0);
         $passedRegex = FALSE;
         header("Location: newCompanyForm.php?cn");
         exit();
@@ -111,11 +117,13 @@
             if(!insert_prepared_companyUpload("../",$cleanedNamefromForm,$cleanedAddressfromForm,$cleanedAddress2fromForm,$cleanedPoastcodefromForm,$cleanedCountryfromForm,1)){
                 // if unexpected results untrust user
                 $_SESSION['unTrustedUser'] = true;
+                error_log("user untrusted:".$_SESSION['user']."-".$_SESSION['ip'], 0);
             }
             // "UPDATE users SET company = ? WHERE username = ?"
             if(update_prepared_SetCompanyToUserTransaction("../", $_SESSION['user'], $cleanedNamefromForm,1)){
                 // if unexpected results untrust user
                 $_SESSION['unTrustedUser'] = true;
+                error_log("user untrusted:".$_SESSION['user']."-".$_SESSION['ip'], 0);
             }
         }
         
@@ -143,8 +151,7 @@
          * we then redirect the user to index.php
          */
          
-        //include("../logs/logs.php");
-        //header("Location: ../view/userRegister.php?error");
+        header("Location: newCompanyForm.php?cn");
     
     }
 

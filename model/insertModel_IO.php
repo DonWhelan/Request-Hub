@@ -12,6 +12,7 @@
         $connection = insertConnectionString($dir);
         // Check connection
         if ($connection->connect_error) {
+            error_log("unable to connect! insert_prepared_imageUpload(),", 0);
             die("Connection failed: " . $connection->connect_error);
         }
         $stmt = $connection->prepare("INSERT INTO images (filename, hash, owner, virusFree) VALUES (?,?,?,?)");
@@ -24,7 +25,7 @@
         $affectedRows = mysqli_stmt_affected_rows($stmt);
         // check expected result
         if($affectedRows != $expectedResult){
-            //include("logs/logsMail.php");
+            error_log("inexpected result! insert_prepared_imageUpload(),", 0);
             return false;
         }else{
             return true;
@@ -45,6 +46,7 @@
         
         // Check connection
         if ($connection->connect_error) {
+            error_log("unable to connect! insert_prepared_imageUploadTransaction(),", 0);
             die("Connection failed: " . $connection->connect_error);
         }
         $stmt = $connection->prepare("INSERT INTO images (filename, hash, owner, virusFree) VALUES (?,?,?,?)");
@@ -57,7 +59,7 @@
         $affectedRows = mysqli_stmt_affected_rows($stmt);
         // check expected result
         if($affectedRows != $expectedResult){
-            //include("logs/logsMail.php");
+            error_log("unexpected results! insert_prepared_imageUploadTransaction(),", 0);
             mysqli_query($connection,"rollback");
             return false;
         }else{

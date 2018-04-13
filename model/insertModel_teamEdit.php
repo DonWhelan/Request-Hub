@@ -13,17 +13,18 @@
         $connection = mysqli_connect(iHOST, iUSER, iPASS);
         if (!$connection) {
             trigger_error("Could not reach database!<br/>");
-            include("logs/logsMail-1dir.php");
+            error_log("uneable to connect! insert_prepared_teamEdit(),", 0);
             exit();
         }
         $db_selected = mysqli_select_db($connection, iDB);
         if (!$db_selected) {
             trigger_error("Could not reach database!<br/>");
-            include("logs/logsMail-1dir.php");
+            error_log("uneable to connect! insert_prepared_teamEdit(),", 0);
             exit();
         } 
         // Check connection
         if ($connection->connect_error) {
+            error_log("uneable to connect! insert_prepared_teamEdit(),", 0);
             die("Connection failed: " . $connection->connect_error);
         }
         
@@ -33,7 +34,7 @@
         $affectedRows = mysqli_stmt_affected_rows($stmt);
         // check expected result
         if($affectedRows != $expectedResult){
-            //include("logs/logsMail.php");
+            error_log("inexpected result! insert_prepared_teamEdit(),", 0);
             return false;
         }else{
             return true;
@@ -46,17 +47,18 @@
         $connection = mysqli_connect(iHOST, iUSER, iPASS);
         if (!$connection) {
             trigger_error("Could not reach database!<br/>");
-            include("logs/logsMail-1dir.php");
+            error_log("uneable to connect! insert_prepared_teamEdit(),", 0);
             exit();
         }
         $db_selected = mysqli_select_db($connection, iDB);
         if (!$db_selected) {
             trigger_error("Could not reach database!<br/>");
-            include("logs/logsMail-1dir.php");
+            error_log("uneable to connect! insert_prepared_teamEdit(),", 0);
             exit();
         } 
         // Check connection
         if ($connection->connect_error) {
+            error_log("uneable to connect! insert_prepared_teamEdit(),", 0);
             die("Connection failed: " . $connection->connect_error);
         }
         
@@ -72,7 +74,7 @@
         $affectedRows = mysqli_stmt_affected_rows($stmt);
         // check expected result
         if($affectedRows == $expectedResult){
-            //include("logs/logsMail.php");
+            error_log("inexpected result! insert_prepared_teamEdit(),", 0);
             mysqli_query($connection,"rollback");
             return false;
         }else{

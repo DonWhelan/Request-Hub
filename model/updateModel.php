@@ -6,13 +6,13 @@
         $connection = mysqli_connect(uHOST, uUSER, uPASS);
         if (!$connection) {
             trigger_error("Could not reach database!<br/>");
-            include("logs/logsMail-1dir.php");
+            error_log("could not connect! updateConnectionString(),", 0);
             exit();
         }
         $db_selected = mysqli_select_db($connection, uDB);
         if (!$db_selected) {
             trigger_error("Could not reach database!<br/>");
-            include("logs/logsMail-1dir.php");
+            error_log("could not connect! updateConnectionString(),", 0);
             exit();
         } 
         return $connection;
@@ -54,7 +54,7 @@
         
         if(($rowsBefore != $rowsAfter) || ($affectedRows != $expectedResult)){
             if($affectedRows != 0){
-                include("logs/logsMail.php");
+                error_log("Unexpected result! update_sqliLog(),", 0);
             }   
         }
         mysqli_close($connection);
@@ -88,7 +88,7 @@
         
         if(($rowsBefore != $rowsAfter) || ($affectedRows != $expectedResult)){
             if($affectedRows != 0){
-                include("logs/logsMail.php");
+                error_log("Unexpected result! update_sqliLog(),", 0);
                 mysqli_query($connection,"rollback");
             }else{
                 mysqli_query($connection,"commit");

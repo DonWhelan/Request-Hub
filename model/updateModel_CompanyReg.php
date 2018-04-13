@@ -16,13 +16,13 @@
         $connection = mysqli_connect(uHOST, uUSER, uPASS);
         if (!$connection) {
             trigger_error("Could not reach database!<br/>");
-            //include("logs/logsMail-1dir.php");
+            error_log("Could not connect! update_prepared_SetCompanyToUser(),", 0);
             exit();
         }
         $db_selected = mysqli_select_db($connection, uDB);
         if (!$db_selected) {
             trigger_error("Could not reach database!<br/>");
-            //include("logs/logsMail-1dir.php");
+            error_log("Could not connect! update_prepared_SetCompanyToUser(),", 0);
             exit();
         }
         // Check connection
@@ -32,15 +32,13 @@
         // "UPDATE users SET company = ?  WHERE username = ?
         $stmt = $connection->prepare("UPDATE userCompanyUpdateView SET company = ? WHERE username = ?");
         $stmt->bind_param("ss", $compamy, $name);
-        if($stmt->execute()){
-            echo "sucess <br>";
-        }else{
-            echo "failed run <br>";
+        if(!$stmt->execute()){
+            error_log("Could not connect! update_prepared_SetCompanyToUser(),", 0);
         }
         $affectedRows = mysqli_stmt_affected_rows($stmt);
         // check expected result
         if($affectedRows != $expectedResult){
-            //include("logs/logsMail.php");
+            error_log("Unexpected result! update_prepared_SetCompanyToUser(),", 0);
             return false;
         }else{
             return true;
@@ -53,17 +51,18 @@
         $connection = mysqli_connect(uHOST, uUSER, uPASS);
         if (!$connection) {
             trigger_error("Could not reach database!<br/>");
-            //include("logs/logsMail-1dir.php");
+            error_log("Could not connect! update_prepared_SetCompanyToUserTransaction(),", 0);
             exit();
         }
         $db_selected = mysqli_select_db($connection, uDB);
         if (!$db_selected) {
             trigger_error("Could not reach database!<br/>");
-            //include("logs/logsMail-1dir.php");
+            error_log("Could not connect! update_prepared_SetCompanyToUserTransaction(),", 0);
             exit();
         }
         // Check connection
         if ($connection->connect_error) {
+            error_log("Could not connect! update_prepared_SetCompanyToUserTransaction(),", 0);
             die("Connection failed: " . $connection->connect_error);
         }
         // alows transactions
@@ -74,15 +73,13 @@
         // "UPDATE users SET company = ?  WHERE username = ?
         $stmt = $connection->prepare("UPDATE userCompanyUpdateView SET company = ? WHERE username = ?");
         $stmt->bind_param("ss", $compamy, $name);
-        if($stmt->execute()){
-            echo "sucess <br>";
-        }else{
-            echo "failed run <br>";
+        if(!$stmt->execute()){
+           error_log("Could not connect! update_prepared_SetCompanyToUserTransaction(),", 0);
         }
         $affectedRows = mysqli_stmt_affected_rows($stmt);
         // check expected result
         if($affectedRows != $expectedResult){
-            //include("logs/logsMail.php");
+            error_log("unexpected results! update_prepared_SetCompanyToUserTransaction(),", 0);
             mysqli_query($connection,"rollback");
             return false;
         }else{

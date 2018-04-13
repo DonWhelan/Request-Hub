@@ -6,6 +6,7 @@
                 <!-- Start Page Content -->
                 <div class="row">
                     <div class="col-md-5">
+                        <a href="requestAdd.php">
                         <div class="card p-30">
                             <div class="media">
                                 <div class="media-left meida media-middle">
@@ -17,6 +18,7 @@
                                 </div>
                             </div>
                         </div>
+                        </a>
                    </div>
               
                     <div class="col-md-5">
