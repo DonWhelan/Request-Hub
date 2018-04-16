@@ -15,6 +15,12 @@
 
     <!-- Custom styles for this template -->
     <link href="signin.css" rel="stylesheet">
+    <script src="../assets/js/jquery-1.10.2.min.js"></script>
+    <script>
+      $(document).ready(function(){
+                $(".alert").delay(1500).fadeToggle("slow");
+      });
+    </script>
 </head>
 
 <body class="text-center">
@@ -25,7 +31,10 @@
         <div class="container">
             <div class="row">
                 <div class="col-sm-12" style="height:130px">
+                <div id="messageBox" class="col-md-12" style="height:50px">
+                    <?php include("../controler/messageBox.php"); ?>
                 </div>
+            </div>
             </div>
         </div>
 

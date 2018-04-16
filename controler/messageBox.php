@@ -10,6 +10,26 @@
          Error setting up team <span><i class='fa fa-poo f-s-15'></i></span>
          </div>";
         }
+        if($_GET["message"]=="incorrect"){
+        echo " <div class='alert alert-warning text-center'>
+         Incorrect details <span><i class='fa fa-poo f-s-15'></i></span>
+         </div>";
+        }
+        if($_GET["message"]=="char"){
+        echo " <div class='alert alert-warning text-center'>
+         Some charicters input cannot be used<span><i class='fa fa-poo f-s-15'></i></span>
+         </div>";
+        }
+        if($_GET["message"]=="error"){
+        echo " <div class='alert alert-danger text-center'>
+         A error has occured <span><i class='fa fa-poo f-s-15'></i></span>
+         </div>";
+        }
+        if($_GET["message"]=="username"){
+        echo " <div class='alert alert-info text-center'>
+        That username is already taken<span><i class='fa fa-poo f-s-15'></i></span>
+         </div>";
+        }
         
     }
 ?>

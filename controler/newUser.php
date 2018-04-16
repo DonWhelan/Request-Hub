@@ -44,13 +44,13 @@
     if(empty($un) || empty($pw) || empty($pwm) || empty($em)){
         error_log("failed regex:".$_SESSION['user']."-".$_SESSION['ip'], 0);
         $passedRegex = FALSE;
-        header("Location: ../view/userRegister.php?un");
+        header("Location: ../view/userRegister.php?message=char");
         exit();
     }
     
     if($pw != $pwm){
         error_log("failed regex:".$_SESSION['user']."-".$_SESSION['ip'], 0);
-       header("Location: ../view/userRegister.php?pw");
+       header("Location: ../view/userRegister.php?message=char");
        exit();
     }
     
@@ -62,7 +62,7 @@
         //If criteria is not met $passedRegex is set to false so the query connection will not open
         $passedRegex = FALSE;
         //we redirect the user back to newUser.php but add info to thr URL yo we can read why the user has been sent back and display the correct error messege
-        header("Location: ../view/userRegister.php?un");
+        header("Location: ../view/userRegister.php?message=char");
         exit();
     }
     
@@ -72,7 +72,7 @@
     } else {
         error_log("failed regex:".$_SESSION['user']."-".$_SESSION['ip'], 0);
         $passedRegex = FALSE;
-        header("Location: ../view/userRegister.php?pw");
+        header("Location: ../view/userRegister.php?message=char");
         exit();
     }
     
@@ -82,7 +82,7 @@
     } else {
         error_log("failed regex:".$_SESSION['user']."-".$_SESSION['ip'], 0);
         $passedRegex = FALSE;
-        header("Location: ../view/userRegister.php?pw");
+        header("Location: ../view/userRegister.php?message=char");
         exit();
     }
     
@@ -92,7 +92,7 @@
     } else {
         error_log("failed regex:".$_SESSION['user']."-".$_SESSION['ip'], 0);
         $passedRegex = FALSE;
-        header("Location: ../view/userRegister.php?em");
+        header("Location: ../view/userRegister.php?message=char");
         exit();
     }
     
@@ -139,7 +139,7 @@
             //closed the sql connection
             mysql_close($connection);
             //redirects user index
-            header("Location: ../view/userRegister.php?rf");
+            header("Location: ../view/userRegister.php?message=error");
             
         }else{
             
@@ -153,7 +153,7 @@
                 if($username == $dbUsername){
                     //we mark the username as not free
                     $UserNameFree = false;
-                    header("Location: ../view/userRegister.php?error");
+                    header("Location: ../view/userRegister.php?message=username");
                     exit();
                 }
             }
@@ -187,7 +187,6 @@
             $userpasswordhashed = password_hash($password_withSaltAndPepper , CRYPT_BLOWFISH,['cost' => 8]);
             
             //we then log the user details to the DB
-            //echo "hello friends";
             insert_sqli('../',"INSERT INTO users (username, password, email, salt) VALUES ('$username','$userpasswordhashed','$email','$salt')");
             
             $_SESSION['user'] = $username;
@@ -203,7 +202,7 @@
             setcookie('cookieId', $randomID, time()+3600, "/", "request-hub.com", 1, 1);
             echo "new user created";
             //user then directed to their new profile
-            header("Location: ../view/newCompanyForm.php");
+            //header("Location: ../view/newCompanyForm.php");
         }
    }else{
     
@@ -216,7 +215,7 @@
          * we then redirect the user to index.php
          */
      
-        header("Location: ../view/userRegister.php?error");
+        header("Location: ../view/userRegister.php?message=char");
     }   
             
 ?>

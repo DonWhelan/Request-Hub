@@ -50,7 +50,7 @@
     } else {
         //If criteria is not met $passedRegex is set to false so the $formusername will not be sent to the SQL server
         $passedRegex = FALSE;
-        //***header("Location: ../failedLogin.php?char");
+        error_log("failed regex:".get_client_ip_env(), 0);
         exit();
     }
     
@@ -60,7 +60,7 @@
         $formpassword = escape_data('../',$subjectPassword);
     } else {
         $passedRegex = FALSE;
-        //***header("Location: ../failedLogin.php?char");
+        error_log("failed regex:".get_client_ip_env(), 0);
         exit();
     }
     
@@ -81,7 +81,7 @@
          */  
         
         if(isset($_SESSION['unTrustedUser'])){
-            error_log("user untrusted:".$_SESSION['user']."-".$_SESSION['ip'], 0);
+            error_log("user untrusted:".$_SESSION['user']."-".get_client_ip_env(), 0);
             echo "untrusted";
             //SELECT username, password FROM userLogonView WHERE username = '$formusername' LIMIT 1
             $resultArray = select_prepared_userLogin_transaction($formusername);
@@ -122,7 +122,7 @@
             //closed the sql connection
             mysql_close($connection);
             //redirects user index
-            //***header("Location: ../failedLogin.php?error");
+            header("Location: ../view/userLogin.php?message=incorrect");
             exit();
         }else{
             if(!empty($resultArray["username"]) && !empty($resultArray["username"])){
@@ -151,15 +151,14 @@
                     header("Location: ../view/vendor/".$_SESSION['company']."/dashboard.php");
                     exit();
                 }else{
-                    echo "no match pw";
+                    header("Location: ../view/userLogin.php?message=incorrect");
                     exit();
                 } 
             }else{
-                //***header("Location: ../failedLogin.php?error");
-                echo "no match us";
+                header("Location: ../view/userLogin.php?message=incorrect");
                 exit();
             }
-            //***header("Location: ../failedLogin.php?error");
+            header("Location: ../view/userLogin.php?message=incorrect");
             exit();
         }
     //if $passedRegex is false .ie if we get any unexpected data from the user   
@@ -175,7 +174,7 @@
          */
          
          error_log("user untrusted:".$_SESSION['user']."-".$_SESSION['ip'], 0);
-         //***header("Location: ../failedLogin.php?error");
+         header("Location: ../view/userLogin.php?message=incorrect");
     }
 ?>  
     
