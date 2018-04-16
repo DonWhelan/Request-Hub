@@ -148,7 +148,8 @@
                     //cookies expires within a hour, has a specified path, specifieddomain, are secure flagged, and has HTTP Only flagged
                     setcookie('cookieId', $randomID, time()+3600, "/", "request-hub.com", 1, 1);
  
-                    header("Location: ../view/vendor/".$_SESSION['company']."/dashboard.php");
+                   // header("Location: ../view/vendor/".$_SESSION['company']."/dashboard.php");
+                   header("Location: ../view/vendor/dashboard.php");
                     exit();
                 }else{
                     header("Location: ../view/userLogin.php?message=incorrect");

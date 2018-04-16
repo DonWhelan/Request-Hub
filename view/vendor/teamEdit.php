@@ -1,5 +1,5 @@
 <?php 
-include("../../../model/selectModel_teamEdit.php"); 
+include("../../model/selectModel_teamEdit.php"); 
 include("navHead.php"); 
 ?>
 
@@ -25,7 +25,7 @@ include("navHead.php");
                         <?php
                             // model prints existing Teams
                             $comapny = $_SESSION['company'];
-                            select_prepared_teamEdit("../../../",$comapny);
+                            select_prepared_teamEdit("../../",$comapny);
                         ?>
        
                     </ul>

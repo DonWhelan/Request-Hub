@@ -41,29 +41,29 @@
     if(empty($UNTRUSTED_tn) || empty($UNTRUSTED_rl)){
         error_log("failed regex:".$_SESSION['user']."-".$_SESSION['ip'], 0);
         $passedRegex = FALSE;
-        header("Location: ../view/vendor/Don.inc/team.php?message=teamError");
+        header("Location: ../view/vendor/team.php?message=teamError");
         exit();
     }
     
     $subjectName = stripslashes(trim($UNTRUSTED_tn));
-    if (preg_match ('%^[A-Za-z0-9\.\' \-!_]{2,20}$%',$subjectName)) {
+    if (preg_match ('%^[A-Za-z0-9\.\' \-!_]{2,500}$%',$subjectName)) {
         $cleanedNamefromForm = escape_data("../",$subjectName);
     } else {
         error_log("failed regex:".$_SESSION['user']."-".$_SESSION['ip'], 0);
         //If criteria is not met $passedRegex is set to false so the query connection will not open
         $passedRegex = FALSE;
         //we redirect the user back to newUser.php but add info to thr URL yo we can read why the user has been sent back and display the correct error messege
-        header("Location: ../view/vendor/Don.inc/team.php?message=teamError");
+        header("Location: ../view/vendor/team.php?message=teamError");
         exit();
     }
     
     $subjectRole = stripslashes(trim($UNTRUSTED_rl));
-    if (preg_match ('%^[A-Za-z0-9\.\' \-!_]{2,20}$%',$subjectName)) {
+    if (preg_match ('%^[A-Za-z0-9\.\' \-!_]{2,500}$%',$subjectName)) {
         $cleanedRolefromForm = escape_data("../",$subjectRole);
     } else {
         error_log("failed regex:".$_SESSION['user']."-".$_SESSION['ip'], 0);
         $passedRegex = FALSE;
-        header("Location: ../view/vendor/Don.inc/team.php?message=teamError");
+        header("Location: ../view/vendor/team.php?message=teamError");
         exit();
     }
     
@@ -91,7 +91,7 @@
             }
         }
         
-        header("Location: ../view/vendor/Don.inc/team.php?message=success");
+        header("Location: ../view/vendor/team.php?message=success");
         
    }else{
     
@@ -104,7 +104,7 @@
          * we then redirect the user to index.php
          */
          
-        header("Location: ../view/vendor/Don.inc/team.php?message=teamError");
+        header("Location: ../view/vendor/team.php?message=teamError");
     
     }
 

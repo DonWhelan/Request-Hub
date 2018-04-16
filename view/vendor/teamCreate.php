@@ -12,7 +12,7 @@
                                 <span><i class="fa fa-plus-square f-s-40 color-primary"></i></span>
                             </div>
                             <div class="media-body media-text-right">
-                                <h2>Create Form</h2>
+                                <h2>Create Team</h2>
                             </div>
                         </div>
                         <br>
@@ -25,7 +25,7 @@
 
                     <div class="col-md-10">
 
-                        <form action="../../../controler/teamAdd.php" method="post" name="Login_Form" class="form-signin">
+                        <form action="../../controler/teamAdd.php" method="post" name="Login_Form" class="form-signin">
                             <div class="form-group">
                                 <!-- Team Name -->
                                 <label for="teamName" class="control-label"><strong>Team Name</strong></label>

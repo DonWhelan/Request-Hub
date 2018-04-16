@@ -1,7 +1,7 @@
 <?php
     session_start();
-    include('../../../model/selectModel.php');
-    include('../../../controler/sessionManagment/session-1.php');
+    include('../../model/selectModel.php');
+    include('../../controler/sessionManagment/session-1.php');
 
 ?>
 
@@ -10,19 +10,19 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
     <!-- Bootstrap core CSS -->
-    <link href="../../../../../dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="../../../../dist/css/bootstrap.min.css" rel="stylesheet">
     <!-- Custom styles for this template -->
     <link href="dashboard.css" rel="stylesheet">
-    <?php include('../../../includes/pageIncludes/head-3.php');?>
-    <link href="../../../style/sidenav.css" rel="stylesheet">
+    <?php include('../../includes/pageIncludes/head-3.php');?>
+    <link href="../../style/sidenav.css" rel="stylesheet">
   </head>
 
   <body>
     <!--referance: https://getbootstrap.com/docs/4.0/examples/-->
     <!-- ======================= top nav bar =========================== -->
     <nav class="navbar navbar-dark sticky-top bg-dark flex-md-nowrap p-0">
-      <a class="navbar-brand col-sm-3 col-md-2 mr-1" href="#">Request Hub <img src="../../../images/icon.png" alt="" style="height:25px"></a>
-      <a href="../../../controler/logout.php"><button class="btn btn-outline-info my-sm-0" type="submit">Log out</button></a>
+      <a class="navbar-brand col-sm-3 col-md-2 mr-1" href="#">Request Hub <img src="../../images/icon.png" alt="" style="height:25px"></a>
+      <a href="../../controler/logout.php"><button class="btn btn-outline-info my-sm-0" type="submit">Log out</button></a>
     </nav>
     
     <div class="container-fluid">
@@ -137,9 +137,9 @@
     ================================================== -->
     <!-- Placed at the end of the document so the pages load faster -->
     <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous"></script>
-    <script>window.jQuery || document.write('<script src="../../../../assets/js/vendor/jquery-slim.min.js"><\/script>')</script>
-    <script src="../../../../assets/js/vendor/popper.min.js"></script>
-    <script src="../../../../dist/js/bootstrap.min.js"></script>
+    <script>window.jQuery || document.write('<script src="../../../assets/js/vendor/jquery-slim.min.js"><\/script>')</script>
+    <script src="../../../assets/js/vendor/popper.min.js"></script>
+    <script src="../../../dist/js/bootstrap.min.js"></script>
 
     <!-- Icons -->
     <script src="https://unpkg.com/feather-icons/dist/feather.min.js"></script>

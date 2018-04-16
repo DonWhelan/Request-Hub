@@ -74,7 +74,7 @@
         </div>
         <div class="row">
             <div id="messageBox" class="col-md-10" style="height:50px">
-                <?php include("../../../controler/messageBox.php"); ?>
+                <?php include("../../controler/messageBox.php"); ?>
             </div>
          </div>
       </div>
