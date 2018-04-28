@@ -42,7 +42,7 @@
                             <input type="hidden" name="uid" value="<?php echo $uid; ?>">
                             <b><?php echo $resultRequestName;?> </b>
                             <br><?php echo $resultDiscription; ?><br><br>
-                            <textarea name="infoForm" rows='4'cols='100'><?php echo $infoForm; ?></textarea>
+                            <textarea name="infoForm" rows='8'cols='100'><?php echo $infoForm; ?></textarea>
                             <br>
                             <button class='btn btn-outline-info btn-xs float-right' type="submit" value="Submit">Request</button>
                         </form>
