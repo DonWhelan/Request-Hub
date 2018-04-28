@@ -38,7 +38,7 @@
     if(empty($UNTRUSTED_cn) || empty($UNTRUSTED_ad) || empty($UNTRUSTED_pc) || empty($UNTRUSTED_cn)){
         $passedRegex = FALSE;
         error_log("failed regex:".$_SESSION['user']."-".$_SESSION['ip'], 0);
-        header("Location: newCompanyForm.php?mt");
+        header("Location: newCompanyForm.php?message=char");
         exit();
     }
     
@@ -50,7 +50,7 @@
         $passedRegex = FALSE;
         error_log("failed regex:".$_SESSION['user']."-".$_SESSION['ip'], 0);
         //we redirect the user back to newUser.php but add info to thr URL yo we can read why the user has been sent back and display the correct error messege
-        header("Location: newCompanyForm.php?cn");
+        header("Location: newCompanyForm.php?message=char");
         exit();
     }
     
@@ -60,7 +60,7 @@
     } else {
         error_log("failed regex:".$_SESSION['user']."-".$_SESSION['ip'], 0);
         $passedRegex = FALSE;
-        header("Location: newCompanyForm.php?ad");
+        header("Location: newCompanyForm.php?message=char");
         exit();
     }
     
@@ -70,7 +70,7 @@
     } else {
         error_log("failed regex:".$_SESSION['user']."-".$_SESSION['ip'], 0);
         $passedRegex = FALSE;
-        header("Location: newCompanyForm.php?ad2");
+        header("Location: newCompanyForm.php?message=char");
         exit();
     }
     
@@ -80,7 +80,7 @@
     } else {
         error_log("failed regex:".$_SESSION['user']."-".$_SESSION['ip'], 0);
         $passedRegex = FALSE;
-        header("Location: newCompanyForm.php?pc");
+        header("Location: newCompanyForm.php?message=char");
         exit();
     }
     
@@ -90,7 +90,7 @@
     } else {
         error_log("failed regex:".$_SESSION['user']."-".$_SESSION['ip'], 0);
         $passedRegex = FALSE;
-        header("Location: newCompanyForm.php?cn");
+        header("Location: newCompanyForm.php?message=char");
         exit();
     }
     
@@ -151,7 +151,7 @@
          * we then redirect the user to index.php
          */
          
-        header("Location: newCompanyForm.php?cn");
+        header("Location: newCompanyForm.php?message=char");
     
     }
 

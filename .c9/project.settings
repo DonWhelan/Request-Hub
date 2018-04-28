@@ -1,7 +1,4 @@
 {
-    "build": {
-        "@saveall": true
-    },
     "installer": {
         "@auto": true
     },

@@ -6,7 +6,7 @@
                 <!-- Start Page Content -->
                 <div class="row">
                     <div class="col-md-5">
-                        <a href="requestAdd.php">
+                        <a href="requestName.php">
                         <div class="card p-30">
                             <div class="media">
                                 <div class="media-left meida media-middle">
@@ -22,6 +22,7 @@
                    </div>
               
                     <div class="col-md-5">
+                        <a href="requestEdit.php">
                         <div class="card p-30">
                             <div class="media">
                                 <div class="media-left meida media-middle">
@@ -33,8 +34,16 @@
                                 </div>
                             </div>
                         </div>
+                        </a>
                     </div>
+                </div>
+                
+                <div class="row">
+                    <div id="messageBox" class="col-md-10" style="height:50px">
+                        <?php include("../../controler/messageBox.php"); ?>
                     </div>
-                   </div>
+                </div>
+            </div>
         </main>
+        
 <?php include("navFoot.php"); ?>           

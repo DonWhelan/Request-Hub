@@ -30,6 +30,11 @@
         That username is already taken<span><i class='fa fa-poo f-s-15'></i></span>
          </div>";
         }
+        if($_GET["message"]=="reqSucess"){
+        echo " <div class='alert alert-success text-center'>
+        request Created<span><i class='fa fa-poo f-s-15'></i></span>
+         </div>";
+        }
         
     }
 ?>

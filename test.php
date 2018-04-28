@@ -1,27 +1,28 @@
 <?php
 session_start();
 
-    //include('model/insertModel.php');
-    include('model/selectModel.php');
-    //$age = array("Peter"=>"35", "Ben"=>"37", "Joe"=>"43");
-    
-    //echo $age['Peter'];
-    
-    //$YourSerializedData = base64_encode(serialize($age));
-    
 
-    //print_r($_SESSION);
-    //select_sqli(null,"SELECT array WHERE uid = 1");
+$request = array("totalTasks" => 3, "tasks" => array());
+              
+              
+                                  "team1" => "team1",
+                                  "action1" => "action1",
+                                  "team2" => "team2",
+                                  "action2" => "action2",
+                                  "team3" => "team3",
+                                  "action3" => "action3"
+    echo "<pre>";        
+    print_r($request);
+    echo "<br><br><br>";
+    echo $request['totalTasks']."<br>";
+    echo $request['tasks']['team3'] ;
+    echo "<br><br><br>";
     
-    $result = select_sqli(null,"SELECT array FROM test WHERE uid = 1");
-    while ($row = mysqli_fetch_assoc($result)) {
-        $YourSerializedData = $row['array'];
-    }
+    $test = array(); //init
+    $test['solution'] = 'good';
+    print_r($test);
     
-    $newArray = unserialize(base64_decode($YourSerializedData));
     
-    echo '<pre>';
-    print_r($newArray);
     
     
 

@@ -1,6 +1,8 @@
 <?php 
-include("../../model/selectModel_requestView.php"); 
+include("../../model/selectModel_inRequestView.php"); 
 include("navHead.php"); 
+include("../../controler/inRequestDisplayForm.php"); 
+//include("../../model/inRequestView.php"); 
 ?>
 
         <!-- ======================= dashboard =========================== --> 
@@ -23,9 +25,9 @@ include("navHead.php");
                     <br><br>
 
                         <?php
-                            // model prints existing Teams
-                            $comapny = $_SESSION['company'];
-                            select_prepared_requestView("../../",$comapny);
+                            $UCid = $_GET['formid'];
+                            showRequest($UCid);
+                            //select_prepared_requestView("../../",$comapny);
                         ?>
        
                     </ul>

@@ -4,11 +4,11 @@ include("navHead.php");
 $qty = "";
 $reqName = "";
 $dis = "";
-$infoForm = "";
 $qty = $_POST['qty'];
 $reqName = $_POST['reqName'];
 $dis = $_POST['dis'];
-$infoForm = $_POST['infoForm'];
+
+
 ?>
     <!-- ======================= teamCreate =========================== -->
     <main role="main" class="col-md-9 ml-sm-auto col-lg-10 pt-3 px-4">
@@ -61,13 +61,10 @@ $infoForm = $_POST['infoForm'];
                                     
                                 }
                             ?>
-                            
-                            
                             <div class="form-group float-right">
                             <input type="hidden" class="form-control" id="qty" name="qty" value="<?php echo $qty ?>" placeholder="" required>  
                             <input type="hidden" class="form-control" id="reqName" name="reqName" value="<?php echo $reqName ?>" placeholder="" required> 
                             <input type="hidden" class="form-control" id="dis" name="dis" value="<?php echo $dis ?>" placeholder="" required> 
-                            <input type="hidden" class="form-control" id="dis" name="infoForm" value="<?php echo $infoForm ?>" placeholder="" required> 
                                 <!-- Submit Button -->
                                 <button type="submit" class="btn btn-primary">Add</button>
                             </div>

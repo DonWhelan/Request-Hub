@@ -16,7 +16,7 @@
     if (strpos($escaped_url, 'inbox') !== false) {
         $inboxActive = 'active';
     }
-    if (strpos($escaped_url, 'requests') !== false) {
+    if (strpos($escaped_url, 'request') !== false) {
         $requestsActive = 'active';
     }
     if (strpos($escaped_url, 'create-edit') !== false) {

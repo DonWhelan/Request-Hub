@@ -10,12 +10,12 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
     <!-- Bootstrap core CSS -->
-    <link href="../../../../dist/css/bootstrap.min.css" rel="stylesheet">
+    <!--<link href="../../assets/bootstrap/css/bootstrap.min.css" rel="stylesheet">-->
     <!-- Custom styles for this template -->
     <link href="dashboard.css" rel="stylesheet">
     <?php include('../../includes/pageIncludes/head-3.php');?>
     <link href="../../style/sidenav.css" rel="stylesheet">
-    <script src="https://unpkg.com/feather-icons/dist/feather.min.js"></script>
+    <!--<script src="https://unpkg.com/feather-icons/dist/feather.min.js"></script>-->
     
     <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.0.9/css/all.css" integrity="sha384-5SOiIsAziJl6AWe0HWRKTXlfcSHKmYV4RBF18PPJ173Kzn7jzMyFuTtk8JA7QQG1" crossorigin="anonymous">
     <link href="https://colorlib.com/polygon/elaadmin/css/helper.css" rel="stylesheet">
@@ -57,7 +57,7 @@
                 </a>
               </li>
               <li class="nav-item">
-                <a class="nav-link <?php echo $cAndEActive; ?>" href="request.php">
+                <a class="nav-link <?php echo $requestsActive; ?>" href="request.php">
                   <span data-feather="edit"></span>
                   Requests<span class="sr-only">(current)</span>
                 </a>
