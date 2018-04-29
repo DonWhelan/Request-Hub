@@ -80,6 +80,8 @@
             $_SESSION['unTrustedUser'] = true;
          }
          
+         header("Location: ../../view/vendor/reports.php");
+         
     
     //if $passedRegex is false .ie if we get any unexpected data from the user   
     }else{

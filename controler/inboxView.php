@@ -17,40 +17,42 @@
         $_SESSION['accessQueues']['qty'] = $qtyOfQueues;
         $_SESSION['accessQueues']['array'] = $teamsArray;
     }
-    //echo "<pre>";
-    //print_r($_SESSION['accessQueues']);
     
+    $countOfQueues = 0;
     echo "<div class='row'>";
     foreach ($_SESSION['accessQueues']['array'] as $i) { 
-    $teamName = select_prepared_inboxSelectTeamQueuesFromTeams("../../",$i);
-    ?>
-        <div class="col-md-5">
-          <a href="teamCreate.php">
-            <div class="card p-30">
-                <div class="media">
-                    <div class="media-left meida media-middle">
-                        <span><i class="fa fa-plus-square f-s-40 color-primary"></i></span>
-                    </div>
-                    <div class="media-body media-text-right">
-                        <h2><?php echo $teamName ?></h2>
-                        <p class="m-b-0">Create Teams to assigne tasks</p>
+        $teamName = select_prepared_inboxSelectTeamQueuesFromTeams("../../",$i);
+        $qtyOfRequests = select_prepared_inboxSelectQtyOfRequets("../../",$teamName);
+        ?>
+            <div class="col-md-5">
+              <a href="inboxView.php?Qid=<?php echo $i; ?>">
+                <div class="card p-30">
+                    <div class="media">
+                        <div class="media-left meida media-middle">
+                            <?php 
+                                if($qtyOfRequests > 0){ 
+                                    echo "<span><i class='fa fa-bars f-s-40 color-primary'></i></span>"; 
+                                }else{
+                                    echo "<span><i class='fa fa-bars f-s-40 color-secondary'></i></span>"; 
+                                }
+                            ?>
+                        </div>
+                        <div class="media-body media-text-right">
+                            <h2><?php echo $teamName; ?></h2>
+                            <p class="m-b-0"><?php if($qtyOfRequests > 0){ echo "Request pending: ".$qtyOfRequests; }?></p>
+                        </div>
                     </div>
                 </div>
-            </div>
-            </a>
-       </div>
-    <?php }
-    echo "<div>";
+                </a>
+           </div>
+        <?php
         
-        
-        
-
-
-    // $array = select_prepared_inboxSelectTeamQueuesFromTeams("../../",8);
-    
-    // print_r($array);
-
-    
-
-
+        $countOfQueues++;
+        if($countOfQueues == $_SESSION['accessQueues']['qty']){
+            echo "</div>";
+        }
+        if($countOfQueues % 2 == 0){
+            echo "</div><div class='row'>";
+        }
+    }
 ?>

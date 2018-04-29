@@ -1,6 +1,6 @@
 <?php
 
-    function select_prepared_inboxSelectTeamQueuesFromTeams($dir, $uid) {
+    function select_prepared_inboxGetTeamNameByUID($dir,$teamUID) {
 
         include($dir."../pem/sqlSelect.php");
         $connection = mysqli_connect(sHOST, sUSER, sPASS);
@@ -28,19 +28,18 @@
          */
 
         if ($stmt = mysqli_prepare($connection, "SELECT teamName FROM Teams WHERE uid = ?")) {
-            mysqli_stmt_bind_param($stmt, "s", $uid);
+            mysqli_stmt_bind_param($stmt, "s", $teamUID);
             mysqli_stmt_execute($stmt);
             $teamName = "";
-            mysqli_stmt_bind_result($stmt, $teamName); 
+            mysqli_stmt_bind_result($stmt, $teamName);   
             mysqli_stmt_fetch($stmt);
             return $teamName;
             mysqli_stmt_close($stmt);
         }
-        
        mysqli_close($connection);
     }
     
-    function select_prepared_inboxSelectQtyOfRequets($dir, $QueueName) {
+    function select_prepared_inboxGetRequestsForTeam($dir,$company, $team) {
 
         include($dir."../pem/sqlSelect.php");
         $connection = mysqli_connect(sHOST, sUSER, sPASS);
@@ -67,17 +66,27 @@
          * if details of the query were exploited only u-name and p-word would be exposed and no other personal information.
          */
 
-        if ($stmt = mysqli_prepare($connection, "SELECT COUNT(*) AS 'NumberOfRequests' FROM requests WHERE currentTask = ?")) {
-            mysqli_stmt_bind_param($stmt, "s", $QueueName );
+        if ($stmt = mysqli_prepare($connection, "SELECT uid, name, submitter, owner FROM requests WHERE currentTask = ? and owner = ? ORDER BY uid")) {
+            mysqli_stmt_bind_param($stmt, "ss", $team, $company);
             mysqli_stmt_execute($stmt);
-            $numberOfRequests = "";
-            mysqli_stmt_bind_result($stmt, $numberOfRequests); 
-            mysqli_stmt_fetch($stmt);
-            return $numberOfRequests;
+            $uid = "";
+            $resultName = "";
+            $resultSubmitter = "";
+            $resultOwner = "";
+            mysqli_stmt_bind_result($stmt, $uid, $resultName, $resultSubmitter, $resultOwner);
+            //echo "<li class='list-group-item'><b>Rid:&nbsp;&nbsp;Request Name:      Submitter:</b>:</li>";
+            while (mysqli_stmt_fetch($stmt)) {
+               echo "<tr>
+                      <th scope='row'>".$uid."</th>
+                      <td>".$resultName."</td>
+                      <td>".$resultSubmitter."</td>
+                      <td>".$resultOwner."</td>
+                      <td><a href='inboxViewRequest.php?uid=".$uid."'><button class='btn btn-outline-success btn-xs float-right' type='submit'>view</button></a></td>
+                    </tr>";
+            }
             mysqli_stmt_close($stmt);
         }
-        
        mysqli_close($connection);
     }
- 
+    
 ?>
