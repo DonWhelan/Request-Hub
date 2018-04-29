@@ -8,6 +8,7 @@
         error_log($_SESSION['user']."-".$_SESSION['ip']."-access denied on Qid: ".$uid, 0);
         exit;
     }
+    
     $teamName = select_prepared_inboxGetTeamNameByUID("../../",$uid);
                         
 ?>

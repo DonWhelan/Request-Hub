@@ -17,7 +17,8 @@
                             <span><i class="fa fa-bars f-s-40 color-primary"></i></span>
                         </div>
                         <div class="media-body media-text-right">
-                            <h2><?php echo $teamName; ?></h2>
+                            
+                            <h2><?php echo $teamName; //from:controler/inboxGetTeam.php?></h2>
                         </div>
     
                     </div>

@@ -74,7 +74,6 @@
             $resultSubmitter = "";
             $resultOwner = "";
             mysqli_stmt_bind_result($stmt, $uid, $resultName, $resultSubmitter, $resultOwner);
-            //echo "<li class='list-group-item'><b>Rid:&nbsp;&nbsp;Request Name:      Submitter:</b>:</li>";
             while (mysqli_stmt_fetch($stmt)) {
                echo "<tr>
                       <th scope='row'>".$uid."</th>
