@@ -36,7 +36,7 @@
                     </thead>
                     <tbody>
                         <?php
-                            select_prepared_inboxGetRequestsForTeam("../../",$_SESSION['company'],$teamName)
+                            select_prepared_inboxGetRequestsForTeam("../../",$_SESSION['company'],$teamName,$qid)
                         ?>
                     </tbody>
                 </div>
