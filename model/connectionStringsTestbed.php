@@ -1,6 +1,6 @@
 <?php
     include("connectionStrings.php");
-    //ini_set('display_errors', 'On');
+    ini_set('display_errors', 'On');
     // connectionStringsTestbed
 /* ---------------------  SELECT  ---------------------------------*/
     //------- select_sqli()
@@ -30,7 +30,7 @@
     
     /* ---------------------  INSERT  ---------------------------------*/
     // ------ insert_sqli()
-    // insert_sqli("INSERT INTO `users`(`username`, `password`, `email`) VALUES ('pep1','pep1','pep@pep1.com')");
+     insert_sqli("../","INSERT INTO `requests`(`name`) VALUES ('name')");
     //
     // ------ insert_sqliLog()
     // insert_sqliLog("INSERT INTO testtable (value) VALUES ('1002')","testtable",2);

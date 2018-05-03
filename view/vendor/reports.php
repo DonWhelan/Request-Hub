@@ -16,7 +16,7 @@ include("navHead.php");
                             <span><i class="fa fa-edit f-s-40 color-success"></i></span>
                         </div>
                         <div class="media-body media-text-right">
-                            <h2>Edit Team</h2>
+                            <h2>Requests</h2>
                         </div>
 
                     </div>

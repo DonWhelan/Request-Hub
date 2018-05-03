@@ -1,6 +1,6 @@
 <?php
 
-    function select_prepared_requestView($dir,$company) {
+    function select_prepared_requestEditView($dir,$company) {
 
         include($dir."../pem/sqlSelect.php");
         $connection = mysqli_connect(sHOST, sUSER, sPASS);
@@ -27,16 +27,16 @@
          * if details of the query were exploited only u-name and p-word would be exposed and no other personal information.
          */
 
-        if ($stmt = mysqli_prepare($connection, "SELECT uid, name, description FROM portfolios WHERE owner = ?")) {
+        if ($stmt = mysqli_prepare($connection, "SELECT uid, name, description FROM requests WHERE owner = ?")) {
             mysqli_stmt_bind_param($stmt, "s", $company);
             mysqli_stmt_execute($stmt);
             $uid = "";
-            $resultRequestName = "";
-            $resultDiscription = "";
-            mysqli_stmt_bind_result($stmt, $uid, $resultRequestName, $resultDiscription);   
+            $resultName = "";
+            $resultDescription = "";
+            mysqli_stmt_bind_result($stmt, $uid, $resultName, $resultDescription);   
             while (mysqli_stmt_fetch($stmt)) {
                 echo "<li class='list-group-item'>
-                      <b>".$resultRequestName . "</b>: " . $resultDiscription."<a href='teamEditAmend.php?uid=".$uid."'><button class='btn btn-outline-success btn-xs float-right' type='submit'>edit</button>".
+                      <b>".$resultName.": </b>".$resultDescription."<a href='requestEditForm.php?uid=".$uid."'><button class='btn btn-outline-success btn-xs float-right' type='submit'>edit</button>".
                       "</a></li>";
             }
             mysqli_stmt_close($stmt);

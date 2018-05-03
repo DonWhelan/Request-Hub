@@ -59,7 +59,7 @@
               <li class="nav-item">
                 <a class="nav-link <?php echo $requestsActive; ?>" href="request.php">
                   <span data-feather="edit"></span>
-                  Requests<span class="sr-only">(current)</span>
+                  Forms<span class="sr-only">(current)</span>
                 </a>
               </li>
               <li class="nav-item">
@@ -76,8 +76,8 @@
               </li>
               <li class="nav-item">
                 <a class="nav-link <?php echo $reposrtsActive; ?>" href="reports.php">
-                  <span data-feather="bar-chart-2"></span>
-                  Reports
+                  <span data-feather="file"></span>
+                  Requets
                 </a>
               </li>
             </ul>

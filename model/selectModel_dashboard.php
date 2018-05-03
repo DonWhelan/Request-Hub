@@ -79,7 +79,7 @@
          * if details of the query were exploited only u-name and p-word would be exposed and no other personal information.
          */
 
-        if ($stmt = mysqli_prepare($connection, "SELECT currentTask, COUNT(*) FROM requests GROUP BY currentTask")) {
+        if ($stmt = mysqli_prepare($connection, "SELECT currentTask, COUNT(*) FROM requests WHERE compleate = 0 GROUP BY currentTask")) {
             mysqli_stmt_execute($stmt);
             $resultTeamName = "";
             $requestQty = "";

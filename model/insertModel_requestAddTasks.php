@@ -76,5 +76,38 @@
         }
     
     } 
+    
+    function insert_prepared_requestTeamsAndTasksRemove($dir, $uid) {
+        // connection details are stored outside the web directory and are defined
+        include($dir."../pem/sqlDelete.php");
+        $connection = mysqli_connect(dHOST, dUSER, dPASS);
+        if (!$connection) {
+            trigger_error("Could not reach database!<br/>");
+            error_log("unable to connect! insert_prepared_teamNew(),", 0);
+            exit();
+        }
+        $db_selected = mysqli_select_db($connection, dDB);
+        if (!$db_selected) {
+            trigger_error("Could not reach database!<br/>");
+            error_log("unable to connect! insert_prepared_teamNew(),", 0);
+            exit();
+        } 
+        // Check connection
+        if ($connection->connect_error) {
+            error_log("unable to connect! insert_prepared_teamNew(),", 0);
+            die("Connection failed: " . $connection->connect_error);
+        }
+        
+        $stmt = $connection->prepare("DELETE from portfolios WHERE uid = (?)");
+        $stmt->bind_param("s", $uid);
+        // check expected result
+        if($stmt->execute()){
+            error_log("unexpected result! insert_prepared_requestTeamsAndTasks(),", 0);
+            return false;
+        }else{
+            return true;
+        }
+    
+    }
         
 ?>

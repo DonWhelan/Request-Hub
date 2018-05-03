@@ -41,7 +41,7 @@
      */
 
     if($passedRegex){
-        
+
         /*
          * We have created a view of the users table called userLogonView. It only has access to username and password colums,
          * if details of the query were exploited only u-name and p-word would be exposed and no other personal information.
@@ -78,9 +78,10 @@
          
          if($numrows > 1){
             $_SESSION['unTrustedUser'] = true;
+            echo "untrusted";
          }
          
-         header("Location: ../../view/vendor/reports.php");
+         header("Location: ../../view/vendor/reports.php?here");
          
     
     //if $passedRegex is false .ie if we get any unexpected data from the user   

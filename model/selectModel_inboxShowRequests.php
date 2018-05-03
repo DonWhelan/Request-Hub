@@ -39,6 +39,45 @@
        mysqli_close($connection);
     }
     
+    function select_prepared_inboxGetCurrentActivity($dir,$requestUID) {
+
+        include($dir."../pem/sqlSelect.php");
+        $connection = mysqli_connect(sHOST, sUSER, sPASS);
+        if (!$connection) {
+            trigger_error("Could not reach database!<br/>");
+            error_log("Could not connect! select_prepared_teamEdit(),", 0);
+            exit();
+        }
+        $db_selected = mysqli_select_db($connection, sDB);
+        if (!$db_selected) {
+            trigger_error("Could not reach database!<br/>");
+            error_log("Could not connect! select_prepared_teamEdit(),", 0);
+            exit();
+        }
+        /* check connection */
+        if (mysqli_connect_errno($connection)) {
+            error_log("Could not connect! select_prepared_teamEdit(),", 0);
+            printf("Connect failed: %s\n", mysqli_connect_error());
+            exit();
+        }
+        
+        /*
+         * We have created a view of the users table called userLogonView. It only has access to username and password colums,
+         * if details of the query were exploited only u-name and p-word would be exposed and no other personal information.
+         */
+
+        if ($stmt = mysqli_prepare($connection, "SELECT currentActivity FROM requests WHERE uid = ?")) {
+            mysqli_stmt_bind_param($stmt, "s", $requestUID);
+            mysqli_stmt_execute($stmt);
+            $currentActivity = "";
+            mysqli_stmt_bind_result($stmt, $currentActivity);   
+            mysqli_stmt_fetch($stmt);
+            return $currentActivity;
+            mysqli_stmt_close($stmt);
+        }
+       mysqli_close($connection);
+    }
+    
     function select_prepared_inboxGetRequestsForTeam($dir,$company, $team, $Qid) {
 
         include($dir."../pem/sqlSelect.php");
@@ -66,7 +105,7 @@
          * if details of the query were exploited only u-name and p-word would be exposed and no other personal information.
          */
 
-        if ($stmt = mysqli_prepare($connection, "SELECT uid, name, submitter, owner FROM requests WHERE currentTask = ? and owner = ? ORDER BY uid")) {
+        if ($stmt = mysqli_prepare($connection, "SELECT uid, name, submitter, owner FROM requests WHERE currentTask = ? AND owner = ? AND compleate = 0 ORDER BY uid")) {
             mysqli_stmt_bind_param($stmt, "ss", $team, $company);
             mysqli_stmt_execute($stmt);
             $uid = "";
@@ -88,7 +127,7 @@
        mysqli_close($connection);
     }
     
-    function select_prepared_inboxGetRequestsFromRid($dir,$company, $team, $Rid) {
+    function select_prepared_inboxGetRequestsFromRid($dir,$company, $team, $Rid, $qid) {
         
         // echo $company;
         // echo $team;
@@ -133,7 +172,7 @@
                       <td>".$resultName."</td>
                       <td>".$resultSubmitter."</td>
                       <td>".$resultOwner."</td>
-                      <td><a href='inboxViewRequest.php?uid=&Qid='><button class='btn btn-outline-success btn-xs float-right' type='submit'>Compleate</button></a></td>
+                      <td><a href='../../controler/inboxUpdateTask.php?Rid=".$uid."&Qid=".$qid."'><button class='btn btn-outline-success btn-xs float-right' type='submit'>Compleate</button></a></td>
                     </tr>";
             }
             return $infoForm;

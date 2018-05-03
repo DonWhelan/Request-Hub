@@ -1,4 +1,9 @@
 <?php
+
+    /*
+     * sets the active highlight on the side nave based on what is in the URL
+     */
+     
     $url =  $_SERVER['REQUEST_URI'];
     $escaped_url = htmlspecialchars( $url, ENT_QUOTES, 'UTF-8' );
     

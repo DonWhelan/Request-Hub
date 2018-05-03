@@ -57,23 +57,37 @@ session_start();
                 error_log("unexpected result! insert_prepared_inRequestAdd(),", 0);
                 $goodResult = false;
             }
-        }    
+        }  
         
-        $Istmt = $connection->prepare("INSERT INTO requests (owner, name, submitter, description, infoForm, currentTask, requestObj) VALUES (?,?,?,?,?,?,?)");
-        $Istmt->bind_param("sssssss", $owner, $name, $submitter, $description, $infoForm, $currentTask, $requestObj);
-        $Istmt->execute();
+        // echo "owner: ".$owner."<br>";
+        // echo "name: ".$name."<br>";
+        // echo "submitter: ".$submitter."<br>";
+        // echo "description: ".$description."<br>";
+        // echo "infoForm: ".$infoForm."<br>";
+        // echo "currentTask: ".$currentTask."<br>";
+        // echo "requestObj: ".$requestObj."<br>";
+        //echo "<pre>";
+        
+        $arrayFromRequest = unserialize(base64_decode($requestObj));
+        $currentActivity = $arrayFromRequest['tasks']['action0'];
+        
+        
+        $Istmt = $connection->prepare("INSERT INTO requests (owner, name, submitter, description, infoForm, currentTask, currentActivity, requestObj) VALUES (?,?,?,?,?,?,?,?)");
+        $Istmt->bind_param("ssssssss", $owner, $name, $submitter, $description, $infoForm, $currentTask, $currentActivity, $requestObj);
+        var_dump($Istmt->execute());
         $affectedRows = mysqli_stmt_affected_rows($Istmt);
         // check expected result
-
         if($affectedRows != $expectedResult){
             error_log("unexpected result! insert_prepared_inRequestAdd(),", 0);
-            $goodResult = false;
+            $goodResult = false;            
+            echo "bad";
             return $affectedRows;
         }else{
+            echo "good";
             return $affectedRows;
         }
     } 
-    
+
     function insert_prepared_inRequestAddTransaction($dir,$uid, $infoForm, $submitter, $expectedResult) {
         // connection details are stored outside the web directory and are defined
         $goodResult = true; 
