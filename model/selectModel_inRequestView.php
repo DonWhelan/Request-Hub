@@ -27,7 +27,7 @@
          * if details of the query were exploited only u-name and p-word would be exposed and no other personal information.
          */
 
-        if ($stmt = mysqli_prepare($connection, "SELECT uid, name, description, infoForm FROM portfolios WHERE owner = ? AND uid = ?")) {
+        if ($stmt = mysqli_prepare($connection, "SELECT uid, name, description, infoForm FROM portfoliosInRequestView WHERE owner = ? AND uid = ?")) {
             mysqli_stmt_bind_param($stmt, "ss", $company, $uid);
             mysqli_stmt_execute($stmt);
             $uid = "";

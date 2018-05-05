@@ -27,7 +27,7 @@
          * if details of the query were exploited only u-name and p-word would be exposed and no other personal information.
          */
 
-        if ($stmt = mysqli_prepare($connection, "SELECT teams FROM users WHERE company = ? AND username = ? LIMIT 1")) {
+        if ($stmt = mysqli_prepare($connection, "SELECT teams FROM usersInboxSelectTeamFromUsers WHERE company = ? AND username = ? LIMIT 1")) {
             mysqli_stmt_bind_param($stmt, "ss", $company, $username);
             mysqli_stmt_execute($stmt);
             $teams = "";

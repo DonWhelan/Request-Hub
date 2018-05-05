@@ -27,7 +27,7 @@
          * if details of the query were exploited only u-name and p-word would be exposed and no other personal information.
          */
 
-        if ($stmt = mysqli_prepare($connection, "SELECT uid, name, description FROM portfolios WHERE owner = ?")) {
+        if ($stmt = mysqli_prepare($connection, "SELECT uid, name, description FROM portfoliosRequestEditView2 WHERE owner = ?")) {
             mysqli_stmt_bind_param($stmt, "s", $company);
             mysqli_stmt_execute($stmt);
             $uid = "";
@@ -71,7 +71,7 @@
          * if details of the query were exploited only u-name and p-word would be exposed and no other personal information.
          */
         $uid = mysqli_real_escape_string($connection,trim($uidFromURL));
-        if ($stmt = mysqli_prepare($connection, "SELECT teamName, role FROM Teams WHERE uid = ?")) {
+        if ($stmt = mysqli_prepare($connection, "SELECT teamName, role FROM TeamsTeamEdit_byUID WHERE uid = ?")) {
             mysqli_stmt_bind_param($stmt, "i", $uid);
             mysqli_stmt_execute($stmt);
             $resultTeamName = "";

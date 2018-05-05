@@ -27,7 +27,7 @@
          * if details of the query were exploited only u-name and p-word would be exposed and no other personal information.
          */
 
-        if ($stmt = mysqli_prepare($connection, "SELECT requestObj, taskHops, currentTask FROM requests WHERE uid = ?")) {
+        if ($stmt = mysqli_prepare($connection, "SELECT requestObj, taskHops, currentTask FROM requestsInboxSelectRequestByRid WHERE uid = ?")) {
             mysqli_stmt_bind_param($stmt, "s", $rid);
             mysqli_stmt_execute($stmt);
             $requestObj = "";

@@ -43,7 +43,7 @@
     }
     
     $subjectName = stripslashes(trim($UNTRUSTED_cn));
-    if (preg_match ('%^[A-Za-z0-9\.\' \-!_]{2,20}$%',$subjectName)) {
+    if (preg_match ('%^[A-Za-z0-9\.\' \-!_]{1,20}$%',$subjectName)) {
         $cleanedNamefromForm = escape_data("../",$subjectName);
     } else {
         //If criteria is not met $passedRegex is set to false so the query connection will not open
@@ -55,7 +55,7 @@
     }
     
     $subjectAddress = stripslashes(trim($UNTRUSTED_ad));
-    if (preg_match ('%^[A-za-z0-9\.\' \-!_&@$~]{2,20}$%', $subjectAddress)) {
+    if (preg_match ('%^[A-za-z0-9\.\' \-!_&@$~]{1,20}$%', $subjectAddress)) {
         $cleanedAddressfromForm = escape_data("../",$subjectAddress);
     } else {
         error_log("failed regex:".$_SESSION['user']."-".$_SESSION['ip'], 0);
@@ -65,7 +65,7 @@
     }
     
     $subjectAddress2 = stripslashes(trim($UNTRUSTED_ad2));
-    if (preg_match ('%^[A-za-z0-9\.\' \-!_&@$~]{2,20}$%', $subjectAddress2)) {
+    if (preg_match ('%^[A-za-z0-9\.\' \-!_&@$~]{1,20}$%', $subjectAddress2)) {
         $cleanedAddress2fromForm = escape_data("../",$subjectAddress2);
     } else {
         error_log("failed regex:".$_SESSION['user']."-".$_SESSION['ip'], 0);
@@ -75,7 +75,7 @@
     }
     
     $subjectPostcode = stripslashes(trim($UNTRUSTED_pc));
-    if (preg_match ('%^[A-za-z0-9\.\' \-!_&@.$~]{2,30}$%', $subjectPostcode)) {
+    if (preg_match ('%^[A-za-z0-9\.\' \-!_&@.$~]{1,30}$%', $subjectPostcode)) {
         $cleanedPoastcodefromForm = escape_data("../",$subjectPostcode);
     } else {
         error_log("failed regex:".$_SESSION['user']."-".$_SESSION['ip'], 0);
@@ -85,7 +85,7 @@
     }
     
     $subjectCountry = stripslashes(trim($UNTRUSTED_cn));
-    if (preg_match ('%^[A-za-z0-9\.\' \-!_&@.$~]{2,30}$%', $subjectCountry)) {
+    if (preg_match ('%^[A-za-z0-9\.\' \-!_&@.$~]{1,30}$%', $subjectCountry)) {
         $cleanedCountryfromForm = escape_data("../",$subjectCountry);
     } else {
         error_log("failed regex:".$_SESSION['user']."-".$_SESSION['ip'], 0);
@@ -100,6 +100,7 @@
      */
     
    if($passedRegex){
+       echo "*passed*";
        
         /*
          * We have created a view of the users table called userCompanyUpdateView. It only has access to username and company colums,
@@ -110,37 +111,45 @@
          */  
          
         if(isset($_SESSION['unTrustedUser'])){
-            insert_prepared_companyUploadTransaction("../",$cleanedNamefromForm,$cleanedAddressfromForm,$cleanedAddress2fromForm,$cleanedPoastcodefromForm,$cleanedCountryfromForm,1);
-            update_prepared_SetCompanyToUserTransaction("../", $_SESSION['user'], $cleanedNamefromForm,1);
+            echo "untrusted*";
+            // insert_prepared_companyUploadTransaction("../",$cleanedNamefromForm,$cleanedAddressfromForm,$cleanedAddress2fromForm,$cleanedPoastcodefromForm,$cleanedCountryfromForm,1);
+            // update_prepared_SetCompanyToUserTransaction("../", $_SESSION['user'], $cleanedNamefromForm,1);
         }else{
             // INSERT INTO company (name, address, address2, postcode, country) VALUES (?,?,?,?,?)"
             if(!insert_prepared_companyUpload("../",$cleanedNamefromForm,$cleanedAddressfromForm,$cleanedAddress2fromForm,$cleanedPoastcodefromForm,$cleanedCountryfromForm,1)){
                 // if unexpected results untrust user
-                $_SESSION['unTrustedUser'] = true;
-                error_log("user untrusted:".$_SESSION['user']."-".$_SESSION['ip'], 0);
+                // $_SESSION['unTrustedUser'] = true;
+                // error_log("user untrusted:".$_SESSION['user']."-".$_SESSION['ip'], 0);
+                echo "insert-fail*";
+            }else{
+                echo "insert-success*";
             }
             // "UPDATE users SET company = ? WHERE username = ?"
             if(update_prepared_SetCompanyToUserTransaction("../", $_SESSION['user'], $cleanedNamefromForm,1)){
                 // if unexpected results untrust user
-                $_SESSION['unTrustedUser'] = true;
-                error_log("user untrusted:".$_SESSION['user']."-".$_SESSION['ip'], 0);
+                // $_SESSION['unTrustedUser'] = true;
+                // error_log("user untrusted:".$_SESSION['user']."-".$_SESSION['ip'], 0);
+                echo "select-fail*";
+            }else{
+                echo "select-success*";
             }
         }
         
         
-        $_SESSION['company'] = $cleanedNamefromForm;
-        $contents = file_get_contents("../view/vendor/vendorTemplate.php");
-        $file = "dashboard.php";
-        $path = "../view/vendor/".$_SESSION['company'];
-        mkdir($path);
-        chmod($path, 0777); 
-        $filepath = $path."/".$file;
-        file_put_contents($filepath,$contents);
-        chmod($filepath, 0777); 
+        // $_SESSION['company'] = $cleanedNamefromForm;
+        // $contents = file_get_contents("../view/vendor/vendorTemplate.php");
+        // $file = "dashboard.php";
+        // $path = "../view/vendor/".$_SESSION['company'];
+        // mkdir($path);
+        // chmod($path, 0777); 
+        // $filepath = $path."/".$file;
+        // file_put_contents($filepath,$contents);
+        // chmod($filepath, 0777); 
         
-        header('location: '.$filepath);
+        // header('location: '.$filepath);
         
    }else{
+       echo "failed*";
     
         /*
          * the regex on the clientside in JavaScript is the same as the regex on the serverside in PHP

@@ -27,7 +27,7 @@
          * if details of the query were exploited only u-name and p-word would be exposed and no other personal information.
          */
 
-        if ($stmt = mysqli_prepare($connection, "SELECT teamName FROM Teams WHERE uid = ?")) {
+        if ($stmt = mysqli_prepare($connection, "SELECT teamName FROM teamsInboxGetTeamNameByUID WHERE uid = ?")) {
             mysqli_stmt_bind_param($stmt, "s", $teamUID);
             mysqli_stmt_execute($stmt);
             $teamName = "";
@@ -105,7 +105,7 @@
          * if details of the query were exploited only u-name and p-word would be exposed and no other personal information.
          */
 
-        if ($stmt = mysqli_prepare($connection, "SELECT uid, name, submitter, owner FROM requests WHERE currentTask = ? AND owner = ? AND compleate = 0 ORDER BY uid")) {
+        if ($stmt = mysqli_prepare($connection, "SELECT uid, name, submitter, owner FROM requestsInboxGetRequestsForTeam WHERE currentTask = ? AND owner = ? AND compleate = 0 ORDER BY uid")) {
             mysqli_stmt_bind_param($stmt, "ss", $team, $company);
             mysqli_stmt_execute($stmt);
             $uid = "";
@@ -157,7 +157,7 @@
          * if details of the query were exploited only u-name and p-word would be exposed and no other personal information.
          */
 
-        if ($stmt = mysqli_prepare($connection, "SELECT uid, name, submitter, owner, infoForm FROM requests WHERE currentTask = ? and owner = ? AND uid = ?")) {
+        if ($stmt = mysqli_prepare($connection, "SELECT uid, name, submitter, owner, infoForm FROM requestsInboxGetRequestsFromRid WHERE currentTask = ? and owner = ? AND uid = ?")) {
             mysqli_stmt_bind_param($stmt, "sss", $team, $company, $Rid);
             mysqli_stmt_execute($stmt);
             $uid = "";

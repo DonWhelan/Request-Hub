@@ -1,7 +1,7 @@
 <?php
 
     
-    function select_prepared_teamDropDown($dir,$company) {
+    function select_prepared_teamRadioButtons($dir,$company) {
 
         include($dir."../pem/sqlSelect.php");
         $connection = mysqli_connect(sHOST, sUSER, sPASS);
@@ -28,15 +28,26 @@
          * if details of the query were exploited only u-name and p-word would be exposed and no other personal information.
          */
 
-        if ($stmt = mysqli_prepare($connection, "SELECT teamName FROM teamsTeamDropDown WHERE owningCompany = ?")) {
+        if ($stmt = mysqli_prepare($connection, "SELECT teamName, uid FROM teamsRadioButtons WHERE owningCompany = ?")) {
             mysqli_stmt_bind_param($stmt, "s", $company);
             mysqli_stmt_execute($stmt);
             $resultTeamName = "";
-            mysqli_stmt_bind_result($stmt, $resultTeamName);  
-            //echo"hello";
+            $resultUid = "";
+            mysqli_stmt_bind_result($stmt, $resultTeamName, $resultUid);  
+            $counter = 1;
+            //$coll4Count = 0;
+            //echo "<span>";
             while (mysqli_stmt_fetch($stmt)) {
-                echo "<option value='".$resultTeamName."'>".$resultTeamName."</option>";
+                //$coll4Count++;
+                echo "<label><input name='radio".$counter."' type='checkbox' value='".$resultUid."'> ".$resultTeamName."</label>  ";
+                echo "<input name='qty' type='hidden' value='".$counter."'>";
+                $counter++;
+                // if($coll4Count%3 == 0){
+                //     echo "</span>";
+                // }
+                
             }
+
             mysqli_stmt_close($stmt);
         }
        mysqli_close($connection);

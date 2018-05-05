@@ -27,7 +27,7 @@
          * if details of the query were exploited only u-name and p-word would be exposed and no other personal information.
          */
 
-        if ($stmt = mysqli_prepare($connection, "SELECT teamName FROM Teams WHERE uid = ?")) {
+        if ($stmt = mysqli_prepare($connection, "SELECT teamName FROM teamInboxSelectTeamQueuesFromTeams WHERE uid = ?")) {
             mysqli_stmt_bind_param($stmt, "s", $uid);
             mysqli_stmt_execute($stmt);
             $teamName = "";

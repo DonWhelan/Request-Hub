@@ -39,7 +39,11 @@
         }else{
             return true;
         }
-    }  
+    }
+    
+    // if(insert_prepared_companyUpload("../",22,22,22,22,22,1)){
+    //     echo "success";
+    // }
     
     function insert_prepared_companyUploadTransaction($dir, $name, $address, $address2, $postcode, $country, $expectedResult) {
         // connection details are stored outside the web directory and are defined
