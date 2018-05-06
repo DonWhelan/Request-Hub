@@ -1,29 +1,11 @@
 <?php
-session_start();
+echo "<pre>";
 
 
-$request = array("totalTasks" => 3, "tasks" => array());
-              
-              
-                                  "team1" => "team1",
-                                  "action1" => "action1",
-                                  "team2" => "team2",
-                                  "action2" => "action2",
-                                  "team3" => "team3",
-                                  "action3" => "action3"
-    echo "<pre>";        
-    print_r($request);
-    echo "<br><br><br>";
-    echo $request['totalTasks']."<br>";
-    echo $request['tasks']['team3'] ;
-    echo "<br><br><br>";
+$str = "23;24;25;27;9;22;8";
     
-    $test = array(); //init
-    $test['solution'] = 'good';
-    print_r($test);
-    
-    
-    
-    
-
+$teamstring = $str;
+echo $teamstring."<br>";
+$teamarray = explode(";",$teamstring);
+print_r($teamarray)
 ?>

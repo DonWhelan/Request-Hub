@@ -15,6 +15,10 @@
 
     include("../model/connectionStrings.php");
     include("../model/insertModel_addNewUserForCompany.php");
+    include("../model/deleteModel_removeUser.php");
+    include("../model/updateModel_updateUserDetails.php");
+    
+    
 
 
     /*
@@ -24,6 +28,11 @@
      *  We use preg_match() to search the text, while validating it using regular expressions
      *  The text is then run through the the escape_data() function *notes in includes/connect.php
      */
+     
+
+    $UNTRUSTED_uid = $_GET['uid'];
+    $subjectUID = stripslashes(trim($UNTRUSTED_uid));
+    $uid = escape_data("../",$subjectUID);
         
     //boolean variable used to trigger the SQL query
     $passedRegex = TRUE;
@@ -33,23 +42,32 @@
      * If we get input without data its a indication that the HTML on the client side has been altered for we log the error and exit the login script
      * by changing $passedRegex to false, which will not let the connection to the DB open
      */
+    if(isset($_POST['name'])){
+         $un = $_POST['name'];
+    }
      
-     $un = $_POST['name'];
-     $pw = $_POST['pw'];
-     $pwm = $_POST['pwMatch'];
-     $em = $_POST['email'];
-
-    if(empty($un) || empty($pw) || empty($pwm) || empty($em)){
+    if(isset($_POST['email'])){
+         $em = $_POST['email'];
+    }
+    //if password is set
+    if(isset($_POST['pwMatch']) && isset($_POST['pw'])){
+        $pwm = $_POST['pwMatch'];
+        $pw = $_POST['pw'];
+        $changingPassword = true;
+        if(empty($pw) && empty($pwm)){
+              $changingPassword = false;
+        }elseif($pw != $pwm){
+          error_log("failed regex:".$_SESSION['user']."-".get_client_ip_env(), 0);
+          header("Location: ../view/vendor/team.php?message=pwmatch");
+          exit();
+        }
+        
+    }
+    if(empty($un) || empty($em)){
         error_log("failed regex:".$_SESSION['user']."-".get_client_ip_env(), 0);
         $passedRegex = FALSE;
         header("Location: ../view/vendor/team.php?message=char1");
         exit();
-    }
-    
-    if($pw != $pwm){
-        error_log("failed regex:".$_SESSION['user']."-".get_client_ip_env(), 0);
-      header("Location: ../view/vendor/team.php?message=pwmatch");
-      exit();
     }
     
     $subjectUsername = stripslashes(trim($un));
@@ -65,7 +83,7 @@
     }
     
     $subjectPassword = stripslashes(trim($pw));
-    if (preg_match ('%^[A-za-z0-9\.\' \-!_&@$~]{1,20}$%', $subjectPassword)) {
+    if (preg_match ('%^[A-za-z0-9\.\' \-!_&@$~]{0,20}$%', $subjectPassword)) {
         $password = escape_data('../',$subjectPassword);
     } else {
         error_log("failed regex:".$_SESSION['user']."-".get_client_ip_env(), 0);
@@ -75,7 +93,7 @@
     }
     
     $subjectPasswordm = stripslashes(trim($pwm));
-    if (preg_match ('%^[A-za-z0-9\.\' \-!_&@$~]{1,20}$%', $subjectPasswordm)) {
+    if (preg_match ('%^[A-za-z0-9\.\' \-!_&@$~]{0,20}$%', $subjectPasswordm)) {
         $passwordm = escape_data('../',$subjectPasswordm);
     } else {
         error_log("failed regex:".$_SESSION['user']."-".get_client_ip_env(), 0);
@@ -126,13 +144,13 @@
     }
     //remove trailing ";"
     $teamUidString = substr($teamUidString, 0, -1);
-    echo $teamUidString;
+
 
     /* 
      * Only if the details pass the reggular expressions, $passedRegex remains TRUE and the connection to the DB is run,
      * the sanitised info is then sent to the SQL server
      */
-    
+
    if($passedRegex){
         /*
          * We run a query to see if the username is already registered in the DB
@@ -185,8 +203,6 @@
                 if($username == $dbUsername){
                     //we mark the username as not free
                     $UserNameFree = false;
-                    header("Location: ../view/vendor/team.php?message=username");
-                    exit();
                 }
             }
         } 
@@ -200,7 +216,8 @@
          */
         
         if($UserNameFree){
-            
+            header("Location: ../view/vendor/team.php?message=error");
+        }else{
             /*
              * password_hash() was picked over MD5 as its outdated and unsecure and SHA1 as it dosnt provide the cost functinality that password_hash() does which will defend against brute force attacks
              * password_hash() returns the algorithm, cost and salt as part of the returned hash. Therefore, 
@@ -208,22 +225,39 @@
              * This allows the verify function to verify the hash without needing separate storage for the salt or algorithm information.
              * password_hash() also allows us to use Blowfish encryption
              */
-            
-            // brings in pepper which is a defined variable outside the web root
-            include("../../pem/pepper.php");
-            // salt generated
-            $salt = bin2hex(random_bytes(25));
-            // adds peper and salt to the password
-            $password_withSaltAndPepper = pepper.$password.$salt;
-             
-            $userpasswordhashed = password_hash($password_withSaltAndPepper , CRYPT_BLOWFISH,['cost' => 8]);
-            $company = $_SESSION['company'];
-            //we then log the user details to the DB
-            insert_prepared_companyaddUser("../",$username,$userpasswordhashed,$email,$salt,$company, $teamUidString, 1);
-            //insert_sqli('../',"INSERT INTO users (username, password, email, salt, company) VALUES ('$username','$userpasswordhashed','$email','$salt','$company'");
-            echo "new user created";
-            //user then directed to their new profile
-            header("Location: ../view/vendor/team.php?message=userAdded");
+             if($changingPassword){
+                 // delete user
+                 if(delete_prepared_removeUser("../",$uid)){
+                     echo "deleted";
+                 }else{
+                     echo "not deleted";
+                 }
+                
+                // brings in pepper which is a defined variable outside the web root
+                include("../../pem/pepper.php");
+                // salt generated
+                $salt = bin2hex(random_bytes(25));
+                // adds peper and salt to the password
+                $password_withSaltAndPepper = pepper.$password.$salt;
+                 
+                $userpasswordhashed = password_hash($password_withSaltAndPepper , CRYPT_BLOWFISH,['cost' => 8]);
+                $company = $_SESSION['company'];
+                //we then log the user details to the DB
+                insert_prepared_companyaddUser("../",$username,$userpasswordhashed,$email,$salt,$company, $teamUidString, 1);
+                //insert_sqli('../',"INSERT INTO users (username, password, email, salt, company) VALUES ('$username','$userpasswordhashed','$email','$salt','$company'");
+                echo "new user created";
+                //user then directed to their new profile
+                header("Location: ../view/vendor/team.php?message=updated");
+            }else{
+                echo "not changing password";
+                $company = $_SESSION['company'];
+                //update_prepared_updateUserDetails($dir, $uid, $username, $email, $company, $teamUidString, $expectedResult) {
+                if(update_prepared_updateUserDetails("../", $uid, $username,$email,$company, $teamUidString, 1)){
+                    header("Location: ../view/vendor/team.php?message=updated");
+                }else{
+                    header("Location: ../view/vendor/team.php?message=error");
+                }
+            }
         }
    }else{
     

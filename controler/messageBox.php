@@ -35,6 +35,21 @@
         request Created<span><i class='fa fa-poo f-s-15'></i></span>
          </div>";
         }
+        if($_GET["message"]=="pwmatch"){
+        echo " <div class='alert alert-info text-center'>
+        Passwords did not Match<span><i class='fa fa-poo f-s-15'></i></span>
+         </div>";
+        }
+        if($_GET["message"]=="userAdded"){
+        echo " <div class='alert alert-success text-center'>
+        New User Added <span><i class='fa fa-poo f-s-15'></i></span>
+         </div>";
+        }
+        if($_GET["message"]=="updated"){
+        echo " <div class='alert alert-success text-center'>
+        User Updated <span><i class='fa fa-poo f-s-15'></i></span>
+         </div>";
+        }
         
     }
 ?>
