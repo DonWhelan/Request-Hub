@@ -3,6 +3,7 @@
     include('../model/insertModel_inRequest.php');
     
     $passedRegex = TRUE;
+    $UNTRUSTED_IMid = $_POST['imID'];
     $UNTRUSTED_uid = $_POST['uid'];
     $UNTRUSTED_infoForm = $_POST['infoForm'];
     
@@ -31,6 +32,9 @@
         exit();
     }
     
+        $subjectImID= stripslashes(trim($UNTRUSTED_IMid));
+        $imID = escape_data("../",$subjectImID);
+        
         $subjectInfoForm= stripslashes(trim($UNTRUSTED_infoForm));
         $infoForm = escape_data("../",$subjectInfoForm);
 
@@ -55,10 +59,10 @@
             error_log("user untrusted:".$_SESSION['user']."-".get_client_ip_env()."-select_prepared_userLogin_transaction()", 0);
             echo "untrusted";
             //SELECT username, password FROM userLogonView WHERE username = '$formusername' LIMIT 1
-            $numrows = insert_prepared_inRequestAddTransaction("../",$uid,$infoForm,$_SESSION['user'],1);
+            $numrows = insert_prepared_inRequestAddTransaction("../",$uid,$infoForm,$_SESSION['user'],1,$imID);
         }else{
             //insert_prepared_inRequestAdd($dir,$uid, $infoForm, $submitter, $expectedResult)
-            $numrows = insert_prepared_inRequestAdd("../",$uid,$infoForm,$_SESSION['user'],1);
+            $numrows = insert_prepared_inRequestAdd("../",$uid,$infoForm,$_SESSION['user'],1,$imID);
         } 
 
         /*

@@ -28,8 +28,8 @@
      * - update images table with prepaired statment
      * ---------------------------------------------------------------------------------------------------------------------
      */
-
-    $debug = true;
+    $url = $_GET['url'];
+    $debug = false;
     require_once('../model/connectionStrings.php');
     include('../includes/virustotal.class.php');
     include('../includes/virustotalFunctions.php');
@@ -138,22 +138,23 @@
                         unlink("../images/".$OriginalFileName);
                         // 14 - insert to database
                         // 15 - check if user is trusted
+                        $randomID = bin2hex(random_bytes(12));
                         if(isset($_SESSION['unTrustedUser'])){
                             // INSERT INTO images (filename, hash, owner, virusFree) VALUES (?,?,?,?)
                             // $dir, $ufilename, $uhash, $uowner, $uvirusFree, $expectedResult
-                            if(!insert_prepared_imageUploadTransaction("../", $newFileName.".".$ext, $sha256, $_SESSION['user'], 0, 1)){
+                            if(!insert_prepared_imageUploadTransaction("../", $newFileName.".".$ext, $sha256, $_SESSION['user'], 0, 1, $randomID)){
                                 // handel
                             }
                         }else{
                             // INSERT INTO images (filename, hash, owner, virusFree) VALUES (?,?,?,?)
                             // $dir, $ufilename, $uhash, $uowner, $uvirusFree, $expectedResult
-                            if(!insert_prepared_imageUpload("../", $newFileName.".".$ext, $sha256, $_SESSION['user'], 0, 1)){
+                            if(!insert_prepared_imageUpload("../", $newFileName.".".$ext, $sha256, $_SESSION['user'], 0, 1, $randomID)){
                                 $_SESSION['unTrustedUser'] = true;
                             }
                         }
+                        header('location: ..'.$url."&imageID=".$randomID);
+
                         
-                        //header('location: ../welcome.php');
-                        echo "<a href='../view/welcome.php'>back</>";
                     }
                 } else{
                     if($debug){echo "There was an error uploading the file, please try again!";}

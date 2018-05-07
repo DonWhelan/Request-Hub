@@ -8,7 +8,7 @@
     if($requestArray['taskHops'] == NULL){
         $curr = 0;
     }else{
-        $curr = $requestArray['taskHops'] + 1;
+        $curr = $requestArray['taskHops'] ;
     }
     $totalprogress = 100/$total;
     $percentCompleate = $curr * $totalprogress;

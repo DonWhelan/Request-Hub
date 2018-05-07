@@ -5,7 +5,7 @@
          Team Saved <span><i class='fa fa-thumbs-up f-s-15'></i></span>
          </div>";
         }
-        if($_GET["message"]=="teamError"){
+        if($_GET["message"]=="ErrorT"){
         echo " <div class='alert alert-danger text-center'>
          Error setting up team <span><i class='fa fa-poo f-s-15'></i></span>
          </div>";

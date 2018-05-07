@@ -33,7 +33,7 @@ $infoForm = $_POST['infoForm'];
                     <div class="col-md-1">
                     </div>
                     <div class="col-md-10">
-                        <form action="../../controler/requestUpdate.php" method="post" name="Login_Form" class="form-signin">
+                        <form action="../../controler/requestAdd.php" method="post" name="Login_Form" class="form-signin">
                             <?php 
                                 $displayNum = 1;
                                 for( $i = 0; $i<$qty; $i++ ) {

@@ -33,7 +33,7 @@
      $UNTRUSTED_ad = $_POST['address'];
      $UNTRUSTED_ad2 = $_POST['address2'];
      $UNTRUSTED_pc = $_POST['postcode'];
-     $UNTRUSTED_cn = $_POST['country'];
+     $UNTRUSTED_cntry = $_POST['country'];
 
     if(empty($UNTRUSTED_cn) || empty($UNTRUSTED_ad) || empty($UNTRUSTED_pc) || empty($UNTRUSTED_cn)){
         $passedRegex = FALSE;
@@ -84,7 +84,7 @@
         exit();
     }
     
-    $subjectCountry = stripslashes(trim($UNTRUSTED_cn));
+    $subjectCountry = stripslashes(trim($UNTRUSTED_cntry));
     if (preg_match ('%^[A-za-z0-9\.\' \-!_&@.$~]{1,30}$%', $subjectCountry)) {
         $cleanedCountryfromForm = escape_data("../",$subjectCountry);
     } else {

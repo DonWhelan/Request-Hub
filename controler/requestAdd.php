@@ -65,7 +65,7 @@
         //If criteria is not met $passedRegex is set to false so the query connection will not open
         $passedRegex = FALSE;
         //we redirect the user back to newUser.php but add info to thr URL yo we can read why the user has been sent back and display the correct error messege
-        header("Location: ../view/vendor/request.php?message=teamError1");
+        header("Location: ../view/vendor/request.php?message=ErrorT1");
         exit();
     }
     
@@ -84,7 +84,7 @@
             //If criteria is not met $passedRegex is set to false so the query connection will not open
             $passedRegex = FALSE;
             //we redirect the user back to newUser.php but add info to thr URL yo we can read why the user has been sent back and display the correct error messege
-            header("Location: ../view/vendor/request.php?message=teamError2");
+            header("Location: ../view/vendor/request.php?message=ErrorT2");
             exit();
         }
         
@@ -96,7 +96,7 @@
             //If criteria is not met $passedRegex is set to false so the query connection will not open
             $passedRegex = FALSE;
             //we redirect the user back to newUser.php but add info to thr URL yo we can read why the user has been sent back and display the correct error messege
-            header("Location: ../view/vendor/request.php?message=teamError3");
+            header("Location: ../view/vendor/request.php?message=ErrorT3");
             exit();
         }
 
@@ -147,7 +147,7 @@
          * we then redirect the user to index.php
          */
          
-        header("Location: ../view/vendor/request.php?message=teamError4");
+        //header("Location: ../view/vendor/request.php?message=ErrorT4");
     
     }
 

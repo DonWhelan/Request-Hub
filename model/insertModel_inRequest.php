@@ -9,7 +9,7 @@ session_start();
      *   returns true if affected rows are equal expected rows they match, and false if not
      */     
     
-    function insert_prepared_inRequestAdd($dir,$uid, $infoForm, $submitter, $expectedResult) {
+    function insert_prepared_inRequestAdd($dir,$uid, $infoForm, $submitter, $expectedResult,$imID) {
         // connection details are stored outside the web directory and are defined
         $goodResult = true; 
         include($dir."../pem/sqlInsert.php");
@@ -72,8 +72,8 @@ session_start();
         $currentActivity = $arrayFromRequest['tasks']['action0'];
         
         
-        $Istmt = $connection->prepare("INSERT INTO requests (owner, name, submitter, description, infoForm, currentTask, currentActivity, requestObj) VALUES (?,?,?,?,?,?,?,?)");
-        $Istmt->bind_param("ssssssss", $owner, $name, $submitter, $description, $infoForm, $currentTask, $currentActivity, $requestObj);
+        $Istmt = $connection->prepare("INSERT INTO requests (owner, name, submitter, description, infoForm, currentTask, currentActivity, requestObj, imageID) VALUES (?,?,?,?,?,?,?,?,?)");
+        $Istmt->bind_param("sssssssss", $owner, $name, $submitter, $description, $infoForm, $currentTask, $currentActivity, $requestObj, $imID);
         var_dump($Istmt->execute());
         $affectedRows = mysqli_stmt_affected_rows($Istmt);
         // check expected result
@@ -88,7 +88,7 @@ session_start();
         }
     } 
 
-    function insert_prepared_inRequestAddTransaction($dir,$uid, $infoForm, $submitter, $expectedResult) {
+    function insert_prepared_inRequestAddTransaction($dir,$uid, $infoForm, $submitter, $expectedResult,$imID) {
         // connection details are stored outside the web directory and are defined
         $goodResult = true; 
         include($dir."../pem/sqlInsert.php");
@@ -144,8 +144,8 @@ session_start();
             }
         }    
         
-        $Istmt = $connection->prepare("INSERT INTO requests (owner, name, submitter, description, infoForm, currentTask, requestObj) VALUES (?,?,?,?,?,?,?)");
-        $Istmt->bind_param("sssssss", $owner, $name, $submitter, $description, $infoForm, $currentTask, $requestObj);
+        $Istmt = $connection->prepare("INSERT INTO requests (owner, name, submitter, description, infoForm, currentTask, requestObj, imageID) VALUES (?,?,?,?,?,?,?,?)");
+        $Istmt->bind_param("sssssss", $owner, $name, $submitter, $description, $infoForm, $currentTask, $requestObj, $imID);
         $Istmt->execute();
         $affectedRows = mysqli_stmt_affected_rows($Istmt);
         // check expected result

@@ -1,6 +1,6 @@
 <?php
 
-    function select_prepared_inRequestView($dir,$uid, $company) {
+    function select_prepared_inRequestView($dir,$uid, $company, $link, $IMid) {
 
         include($dir."../pem/sqlSelect.php");
         $connection = mysqli_connect(sHOST, sUSER, sPASS);
@@ -43,8 +43,13 @@
                             <b><?php echo $resultRequestName;?> </b>
                             <br><?php echo $resultDiscription; ?><br><br>
                             <textarea name="infoForm" rows='8'cols='100'><?php echo $infoForm; ?></textarea>
+                            <input type="hidden" name="imID" value="<?php echo $IMid; ?>">
                             <br>
                             <button class='btn btn-outline-info btn-xs float-right' type="submit" value="Submit">Request</button>
+                        </form>
+                        <form enctype="multipart/form-data" action="../../fileIO/upload.php?url=<?php echo $link; ?>" method="POST">
+                                <input type="file" name="uploaded_file"></input><br />
+                                <input type="submit" value="Upload"></input>
                         </form>
                     </li>
                 <?php

@@ -59,7 +59,7 @@
         }elseif($pw != $pwm){
           error_log("failed regex:".$_SESSION['user']."-".get_client_ip_env(), 0);
           header("Location: ../view/vendor/team.php?message=pwmatch");
-          exit();
+
         }
         
     }
@@ -67,11 +67,11 @@
         error_log("failed regex:".$_SESSION['user']."-".get_client_ip_env(), 0);
         $passedRegex = FALSE;
         header("Location: ../view/vendor/team.php?message=char1");
-        exit();
+
     }
     
     $subjectUsername = stripslashes(trim($un));
-    if (preg_match ('%^[A-Za-z0-9\.\' \-!_]{1,20}$%',$subjectUsername)) {
+    if (preg_match ('%^[A-Za-z0-9\.\' @\-!_]{0,200}$%',$subjectUsername)) {
         $username = escape_data('../',$subjectUsername);
     } else {
         error_log("failed regex:".$_SESSION['user']."-".get_client_ip_env(), 0);
@@ -79,37 +79,37 @@
         $passedRegex = FALSE;
         //we redirect the user back to newUser.php but add info to thr URL yo we can read why the user has been sent back and display the correct error messege
         header("Location: ../view/vendor/team.php?message=char3");
-        exit();
+
     }
     
     $subjectPassword = stripslashes(trim($pw));
-    if (preg_match ('%^[A-za-z0-9\.\' \-!_&@$~]{0,20}$%', $subjectPassword)) {
+    if (preg_match ('%^[A-Za-z0-9\.\' \-!_&@$~]{0,20}$%', $subjectPassword)) {
         $password = escape_data('../',$subjectPassword);
     } else {
         error_log("failed regex:".$_SESSION['user']."-".get_client_ip_env(), 0);
         $passedRegex = FALSE;
         header("Location: ../view/vendor/team.php?message=char4");
-        exit();
+
     }
     
     $subjectPasswordm = stripslashes(trim($pwm));
-    if (preg_match ('%^[A-za-z0-9\.\' \-!_&@$~]{0,20}$%', $subjectPasswordm)) {
+    if (preg_match ('%^[A-Za-z0-9\.\' \-!_&@$~]{0,20}$%', $subjectPasswordm)) {
         $passwordm = escape_data('../',$subjectPasswordm);
     } else {
-        error_log("failed regex:".$_SESSION['user']."-".get_client_ip_env(), 0);
+         error_log("failed regex:".$_SESSION['user']."-".get_client_ip_env(), 0);
         $passedRegex = FALSE;
         header("Location: ../view/vendor/team.php?message=char5");
-        exit();
+
     }
     
     $subjectEmail = stripslashes(trim($em));
-    if (preg_match ('%^[A-za-z0-9\.\' \-!_&@.$~]{1,30}$%', $subjectEmail)) {
+    if (preg_match ('%^[A-Za-z0-9\.\' \-!_&@.$~]{1,30}$%', $subjectEmail)) {
         $email = escape_data('../',$subjectEmail);
     } else {
         error_log("failed regex:".$_SESSION['user']."-".get_client_ip_env(), 0);
         $passedRegex = FALSE;
         header("Location: ../view/vendor/team.php?message=char6");
-        exit();
+
     }
     
     // access options
@@ -117,13 +117,13 @@
     $UNCLEAN_qty = $_POST['qty'];
 
     $subjectqty = stripslashes(trim($UNCLEAN_qty));
-    if (preg_match ('%^[A-za-z0-9\.\' \-!_&@.$~]{1,30}$%', $subjectqty)) {
+    if (preg_match ('%^[A-Za-z0-9\.\' \-!_&@.$~]{1,30}$%', $subjectqty)) {
         $qty = escape_data('../',$subjectqty);
     } else {
         error_log("failed regex:".$_SESSION['user']."-".get_client_ip_env(), 0);
         $passedRegex = FALSE;
         header("Location: ../view/vendor/team.php?message=char7");
-        exit();
+
     }
     
     $teamUidString = "";
@@ -131,13 +131,13 @@
         if(isset($_POST['radio'.$i])){
             $option = $_POST['radio'.$i];
             $subjectAccessUID = stripslashes(trim($option));
-            if (preg_match ('%^[A-za-z0-9\.\' \-!_&@.$~]{0,30}$%', $subjectAccessUID)) {
+            if (preg_match ('%^[A-Za-z0-9\.\' \-!_&@.$~]{0,30}$%', $subjectAccessUID)) {
                 $accessUID = escape_data('../',$subjectAccessUID);
             } else {
                 error_log("failed regex:".$_SESSION['user']."-".get_client_ip_env(), 0);
-                $passedRegex = FALSE;
-                header("Location: ../view/vendor/team.php?message=char7");
-                exit();
+                // $passedRegex = FALSE;
+                // header("Location: ../view/vendor/team.php?message=char7");
+
             }
             $teamUidString .= $accessUID.";";
         }

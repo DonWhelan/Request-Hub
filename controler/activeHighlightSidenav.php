@@ -25,6 +25,9 @@
     if (strpos($escaped_url, 'request') !== false) {
         $requestsActive = 'active';
     }
+    if (strpos($escaped_url, 'Request') !== false) {
+        $requestsActive = 'active';
+    }
     if (strpos($escaped_url, 'create-edit') !== false) {
         $cAndEActive = 'active';
     }

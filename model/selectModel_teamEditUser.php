@@ -88,7 +88,7 @@
                 $name = $resultUsername;
                 $email = $resultEmail;
                 $teams = $resultTeams;
-                $returnArray = array('name' => $email, 'email' => $email, 'teams' => $teams);
+                $returnArray = array('name' => $name, 'email' => $email, 'teams' => $teams);
                 return $returnArray;
             }
             mysqli_stmt_close($stmt);

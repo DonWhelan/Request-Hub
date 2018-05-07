@@ -3,6 +3,13 @@ include("../../model/selectModel_inRequestView.php");
 include("navHead.php"); 
 include("../../controler/inRequestDisplayForm.php"); 
 //include("../../model/inRequestView.php"); 
+$IMid = "";
+if(isset($_GET['imageID'])){
+    $IMid = $_GET['imageID'];
+    $IMid = getImageID($IMid);
+}else{
+    $IMid = false;
+}
 ?>
 
 <!-- ======================= dashboard =========================== --> 
@@ -26,7 +33,7 @@ include("../../controler/inRequestDisplayForm.php");
 
                         <?php
                             $UCid = $_GET['formid'];
-                            showRequest($UCid);
+                            showRequest($UCid, $IMid);
                             //select_prepared_requestView("../../",$comapny);
                         ?>
        

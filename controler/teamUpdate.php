@@ -92,12 +92,14 @@
 
         if(isset($_SESSION['unTrustedUser'])){
             update_prepared_updateTeam_Transaction("../",$cleanedIDfromForm,$cleanedNamefromForm,$cleanedRolefromForm,1);
+            //exit();
         }else{
             // INSERT INTO company (name, address, address2, postcode, country) VALUES (?,?,?,?,?)"
             if(!update_prepared_updateTeam("../",$cleanedIDfromForm,$cleanedNamefromForm,$cleanedRolefromForm,1)){
               // if unexpected results untrust user
               error_log("user untrusted:".$_SESSION['user']."-".$_SESSION['ip'], 0);
                 $_SESSION['unTrustedUser'] = true;
+               // exit();
             }
         }
         
