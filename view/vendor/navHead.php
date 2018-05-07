@@ -22,6 +22,7 @@
     <!--<link href="https://colorlib.com/polygon/elaadmin/css/style.css" rel="stylesheet">-->
     <link href="../../assets/css/form-elements.css" rel="stylesheet">
     <script src="../../assets/js/jquery-1.10.2.min.js"></script>
+    
     <script>
       $(document).ready(function(){
                 $(".alert").delay(1500).fadeToggle("slow");
@@ -48,7 +49,7 @@
                 
               </li>
               <li class="nav-item">
-                
+              <?php if(!isset($_SESSION['customer'])){ ?>
               </li>
               <li class="nav-item">
                 <a class="nav-link <?php echo $dashboardActive; ?>" href="dashboard.php">
@@ -80,10 +81,16 @@
                   Teams
                 </a>
               </li>
+              <?php } ?>
               <li class="nav-item">
                 <a class="nav-link <?php echo $reposrtsActive; ?>" href="reports.php">
                   <span data-feather="file"></span>
                   Requets
+                </a>
+                <li class="nav-item">
+                <a class="nav-link <?php echo $reposrtsProfile; ?>" href="profile.php">
+                  <span data-feather="user"></span>
+                  Profile
                 </a>
               </li>
             </ul>

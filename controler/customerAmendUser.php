@@ -14,9 +14,9 @@
     
 
     include("../model/connectionStrings.php");
-    include("../model/insertModel_addNewUserForCompany.php");
-    include("../model/deleteModel_removeUser.php");
-    include("../model/updateModel_updateUserDetails.php");
+    include("../model/insertModel_addNewCustomer.php");
+    include("../model/deleteModel_removeCustomer.php");
+    include("../model/updateModel_updateCustomerDetails.php");
     
     
 
@@ -58,7 +58,7 @@
               $changingPassword = false;
         }elseif($pw != $pwm){
           error_log("failed regex:".$_SESSION['user']."-".get_client_ip_env(), 0);
-          header("Location: ../view/vendor/team.php?message=pwmatch");
+          header("Location: ../view/vendor/customers.php?message=pwmatch");
           exit();
         }
         
@@ -66,7 +66,7 @@
     if(empty($un) || empty($em)){
         error_log("failed regex:".$_SESSION['user']."-".get_client_ip_env(), 0);
         $passedRegex = FALSE;
-        header("Location: ../view/vendor/team.php?message=char1");
+        header("Location: ../view/vendor/customers.php?message=char1");
         exit();
     }
     
@@ -78,7 +78,7 @@
         //If criteria is not met $passedRegex is set to false so the query connection will not open
         $passedRegex = FALSE;
         //we redirect the user back to newUser.php but add info to thr URL yo we can read why the user has been sent back and display the correct error messege
-        header("Location: ../view/vendor/team.php?message=char3");
+        header("Location: ../view/vendor/customers.php?message=char3");
         exit();
     }
     
@@ -88,7 +88,7 @@
     } else {
         error_log("failed regex:".$_SESSION['user']."-".get_client_ip_env(), 0);
         $passedRegex = FALSE;
-        header("Location: ../view/vendor/team.php?message=char4");
+        header("Location: ../view/vendor/customers.php?message=char4");
         exit();
     }
     
@@ -98,7 +98,7 @@
     } else {
         error_log("failed regex:".$_SESSION['user']."-".get_client_ip_env(), 0);
         $passedRegex = FALSE;
-        header("Location: ../view/vendor/team.php?message=char5");
+        header("Location: ../view/vendor/customers.php?message=char5");
         exit();
     }
     
@@ -108,44 +108,10 @@
     } else {
         error_log("failed regex:".$_SESSION['user']."-".get_client_ip_env(), 0);
         $passedRegex = FALSE;
-        header("Location: ../view/vendor/team.php?message=char6");
+        header("Location: ../view/vendor/customers.php?message=char6");
         exit();
     }
     
-    // access options
-    
-    $UNCLEAN_qty = $_POST['qty'];
-
-    $subjectqty = stripslashes(trim($UNCLEAN_qty));
-    if (preg_match ('%^[A-za-z0-9\.\' \-!_&@.$~]{1,30}$%', $subjectqty)) {
-        $qty = escape_data('../',$subjectqty);
-    } else {
-        error_log("failed regex:".$_SESSION['user']."-".get_client_ip_env(), 0);
-        $passedRegex = FALSE;
-        header("Location: ../view/vendor/team.php?message=char7");
-        exit();
-    }
-    
-    $teamUidString = "";
-    for ($i = 1; $i <= $qty; $i++) {
-        if(isset($_POST['radio'.$i])){
-            $option = $_POST['radio'.$i];
-            $subjectAccessUID = stripslashes(trim($option));
-            if (preg_match ('%^[A-za-z0-9\.\' \-!_&@.$~]{0,30}$%', $subjectAccessUID)) {
-                $accessUID = escape_data('../',$subjectAccessUID);
-            } else {
-                error_log("failed regex:".$_SESSION['user']."-".get_client_ip_env(), 0);
-                $passedRegex = FALSE;
-                header("Location: ../view/vendor/team.php?message=char7");
-                exit();
-            }
-            $teamUidString .= $accessUID.";";
-        }
-    }
-    //remove trailing ";"
-    $teamUidString = substr($teamUidString, 0, -1);
-
-
     /* 
      * Only if the details pass the reggular expressions, $passedRegex remains TRUE and the connection to the DB is run,
      * the sanitised info is then sent to the SQL server
@@ -158,7 +124,7 @@
         $arr[] = "";
         // select_sqliLog_max1_Rnum returns a sql result object and num of rows affected from the query
         // userUsernameView is a view of users that only shows username
-        $arr = select_sqliLog_max1_Rnum('../',"SELECT username FROM userUsernameView WHERE username = '$username' LIMIT 1",1);   
+        $arr = select_sqliLog_max1_Rnum('../',"SELECT username FROM customers WHERE username = '$username' LIMIT 1",1);   
         
         /*
          * mysqli_query() was chosen over the other connection functions as it only allows one query to be sent to the DB
@@ -187,24 +153,24 @@
             //closed the sql connection
             mysql_close($connection);
             //redirects user index
-            header("Location: ../view/vendor/team.php?message=errorn");
+            header("Location: ../view/vendor/customers.php?message=error1");
             
-        }//else{
+        }else{
             
             /*
              * else 1 or 0 rows are effected is the expected result so we check if the user name matches any existing usernames
              */
              
-        //     $dbUsername = "";
-        //     while ($row = mysqli_fetch_assoc($result)) {
-        //         $dbUsername=$row['username'];
-        //         //if there is a match we redirect to newUser with userE in the url, we can then read that and display the correct error for the user
-        //         if($username == $dbUsername){
-        //             //we mark the username as not free
-        //             $UserNameFree = false;
-        //         }
-        //     }
-        // } 
+            // $dbUsername = "";
+            // while ($row = mysqli_fetch_assoc($result)) {
+            //     $dbUsername=$row['username'];
+            //     //if there is a match we redirect to newUser with userE in the url, we can then read that and display the correct error for the user
+            //     if($username == $dbUsername){
+            //         //we mark the username as not free
+            //         $UserNameFree = false;
+            //     }
+            // }
+        } 
            
         /*
          * --If the username is free--
@@ -215,7 +181,7 @@
          */
         
         // if($UserNameFree){
-        //     header("Location: ../view/vendor/team.php?message=error");
+        //     header("Location: ../view/vendor/customers.php?message=error2");
         // }else{
             /*
              * password_hash() was picked over MD5 as its outdated and unsecure and SHA1 as it dosnt provide the cost functinality that password_hash() does which will defend against brute force attacks
@@ -226,7 +192,7 @@
              */
              if($changingPassword){
                  // delete user
-                 if(delete_prepared_removeUser("../",$uid)){
+                 if(delete_prepared_removeCustomer("../",$uid)){
                      echo "deleted";
                  }else{
                      echo "not deleted";
@@ -242,20 +208,19 @@
                 $userpasswordhashed = password_hash($password_withSaltAndPepper , CRYPT_BLOWFISH,['cost' => 8]);
                 $company = $_SESSION['company'];
                 //we then log the user details to the DB
-                insert_prepared_companyaddUser("../",$username,$userpasswordhashed,$email,$salt,$company, $teamUidString, 1);
+                insert_prepared_customeraddCustomer("../",$username,$userpasswordhashed,$email,$salt,$company, 1);
                 //insert_sqli('../',"INSERT INTO users (username, password, email, salt, company) VALUES ('$username','$userpasswordhashed','$email','$salt','$company'");
                 echo "new user created";
                 //user then directed to their new profile
-                header("Location: ../view/vendor/team.php?message=updated");
+                header("Location: ../view/vendor/customers.php?message=updated");
             }else{
                 echo "not changing password";
                 $company = $_SESSION['company'];
                 //update_prepared_updateUserDetails($dir, $uid, $username, $email, $company, $teamUidString, $expectedResult) {
-                // update_prepared_updateUserDetails("../", 49, "mareERkh", "mark", "asd", "1", 1) ;
-                if(update_prepared_updateUserDetails("../", $uid, $username,$email,$company, $teamUidString, 1)){
-                    header("Location: ../view/vendor/team.php?message=updated");
+                if(update_prepared_updateCustomerDetails("../", $uid, $username,$email,$company, 1)){
+                    header("Location: ../view/vendor/customers.php?message=updated");
                 }else{
-                    //header("Location: ../view/vendor/team.php?message=error1");
+                    header("Location: ../view/vendor/customers.php?message=error3");
                 }
             }
         }
@@ -270,7 +235,7 @@
 //          * we then redirect the user to index.php
 //          */
      
-//         header("Location: ../view/vendor/team.php?message=errorend");
+//         header("Location: ../view/vendor/customers.php?message=error4");
 //     }   
             
 ?>

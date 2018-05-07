@@ -7,6 +7,7 @@
     session_start();
 		include("includes/pageIncludes/head.php");
 	?>
+	<link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.0.12/css/all.css" integrity="sha384-G0fIWCsCzJIMAVNQPfjH08cyYaUtMwjJwqiRKxxE/rx96Uroj1BtIQ6MLJuheaO9" crossorigin="anonymous">
 
 </head>
 
@@ -26,7 +27,33 @@
                 </div>
             </div>
         </div>
+        <!-- Services -->
+        <!--<div class="services-container">-->
+        <!--    <div class="container">-->
+        <!--        <div class="row" style="height:130px; background:blue">-->
+        <!--            <div class="col-sm-2 services-box" style="background:red">-->
 
+        <!--            </div>-->
+        <!--            <div class="col-sm-4 services-box" style="background:yellow">-->
+        <!--                <centre>-->
+        <!--                    <i class="fa fa-user-circle fa-5" aria-hidden="true"></i>-->
+        <!--                    <div class="services-box-icon">qeifeuuq3bfib</div>-->
+        <!--                    <h3>Information security</h3>-->
+        <!--                </centre>-->
+        <!--            </div>-->
+        <!--            <div class="col-sm-4 services-box" style="background:green">-->
+        <!--                <centre>-->
+        <!--                    <i class="fa fa-building fa-5" aria-hidden="true"></i>-->
+        <!--                    <div class="services-box-icon">uiqwhenfqehfpiu</div>-->
+        <!--                    <h3>Information security</h3>-->
+        <!--                </centre>-->
+        <!--            </div>-->
+        <!--            <div class="col-sm-2 services-box" style="background:red">-->
+
+        <!--            </div>-->
+        <!--        </div>-->
+        <!--    </div>-->
+        <!--</div>-->
         <!-- Services -->
         <div class="services-container">
             <div class="container">

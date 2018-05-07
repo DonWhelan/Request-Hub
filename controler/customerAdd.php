@@ -1,4 +1,5 @@
 <?php
+
     session_start();
     
     /*
@@ -7,19 +8,18 @@
      * - passwords are hashed 
      * - Check if the user name is in the 'users' table on the the DB, and check the expected results from query to the DB
      * - if the username is free, write the user details to the DB, and check the expected results from write to the DB
-     * - Adds user details to DB
+     * - Create a session for the user
+     * - We add the usersname and access level of the user from the DB to the session
+     * - We add the IP address of the user to the session
+     * - We create a random 25 character long string as a token and add it to the session
+     * - We also add the token to a secure/HTTP only cookie and sent it to the clients browser
+     * - Create a file named after the username and write the PHP template code to the profile page
+     * - save the file to the profiles directory
      * - Redirect the user their new profile page
      * -------------------------------------------------------------------------------------------------------------------------
      */
     
-
     include("../model/connectionStrings.php");
-    include("../model/insertModel_addNewUserForCompany.php");
-    include("../model/deleteModel_removeUser.php");
-    include("../model/updateModel_updateUserDetails.php");
-    
-    
-
 
     /*
      *  --Regular Expressions(Regex) are used to check for characters that we dont want entered or that we would not expect to be entered into forms --
@@ -28,11 +28,6 @@
      *  We use preg_match() to search the text, while validating it using regular expressions
      *  The text is then run through the the escape_data() function *notes in includes/connect.php
      */
-     
-
-    $UNTRUSTED_uid = $_GET['uid'];
-    $subjectUID = stripslashes(trim($UNTRUSTED_uid));
-    $uid = escape_data("../",$subjectUID);
         
     //boolean variable used to trigger the SQL query
     $passedRegex = TRUE;
@@ -42,32 +37,23 @@
      * If we get input without data its a indication that the HTML on the client side has been altered for we log the error and exit the login script
      * by changing $passedRegex to false, which will not let the connection to the DB open
      */
-    if(isset($_POST['name'])){
-         $un = $_POST['name'];
-    }
      
-    if(isset($_POST['email'])){
-         $em = $_POST['email'];
-    }
-    //if password is set
-    if(isset($_POST['pwMatch']) && isset($_POST['pw'])){
-        $pwm = $_POST['pwMatch'];
-        $pw = $_POST['pw'];
-        $changingPassword = true;
-        if(empty($pw) && empty($pwm)){
-              $changingPassword = false;
-        }elseif($pw != $pwm){
-          error_log("failed regex:".$_SESSION['user']."-".get_client_ip_env(), 0);
-          header("Location: ../view/vendor/team.php?message=pwmatch");
-          exit();
-        }
-        
-    }
-    if(empty($un) || empty($em)){
+     $un = $_POST['name'];
+     $pw = $_POST['pw'];
+     $pwm = $_POST['pwMatch'];
+     $em = $_POST['email'];
+
+    if(empty($un) || empty($pw) || empty($pwm) || empty($em)){
         error_log("failed regex:".$_SESSION['user']."-".get_client_ip_env(), 0);
         $passedRegex = FALSE;
-        header("Location: ../view/vendor/team.php?message=char1");
+        header("Location: ../view/userRegister.php?message=char1");
         exit();
+    }
+    
+    if($pw != $pwm){
+        error_log("failed regex:".$_SESSION['user']."-".get_client_ip_env(), 0);
+       header("Location: ../view/userRegister.php?message=char2");
+       exit();
     }
     
     $subjectUsername = stripslashes(trim($un));
@@ -78,27 +64,27 @@
         //If criteria is not met $passedRegex is set to false so the query connection will not open
         $passedRegex = FALSE;
         //we redirect the user back to newUser.php but add info to thr URL yo we can read why the user has been sent back and display the correct error messege
-        header("Location: ../view/vendor/team.php?message=char3");
+        header("Location: ../view/userRegister.php?message=char3");
         exit();
     }
     
     $subjectPassword = stripslashes(trim($pw));
-    if (preg_match ('%^[A-za-z0-9\.\' \-!_&@$~]{0,20}$%', $subjectPassword)) {
+    if (preg_match ('%^[A-za-z0-9\.\' \-!_&@$~]{1,20}$%', $subjectPassword)) {
         $password = escape_data('../',$subjectPassword);
     } else {
         error_log("failed regex:".$_SESSION['user']."-".get_client_ip_env(), 0);
         $passedRegex = FALSE;
-        header("Location: ../view/vendor/team.php?message=char4");
+        header("Location: ../view/userRegister.php?message=char4");
         exit();
     }
     
     $subjectPasswordm = stripslashes(trim($pwm));
-    if (preg_match ('%^[A-za-z0-9\.\' \-!_&@$~]{0,20}$%', $subjectPasswordm)) {
+    if (preg_match ('%^[A-za-z0-9\.\' \-!_&@$~]{1,20}$%', $subjectPasswordm)) {
         $passwordm = escape_data('../',$subjectPasswordm);
     } else {
         error_log("failed regex:".$_SESSION['user']."-".get_client_ip_env(), 0);
         $passedRegex = FALSE;
-        header("Location: ../view/vendor/team.php?message=char5");
+        header("Location: ../view/userRegister.php?message=char5");
         exit();
     }
     
@@ -108,49 +94,15 @@
     } else {
         error_log("failed regex:".$_SESSION['user']."-".get_client_ip_env(), 0);
         $passedRegex = FALSE;
-        header("Location: ../view/vendor/team.php?message=char6");
+        header("Location: ../view/userRegister.php?message=char6");
         exit();
     }
     
-    // access options
-    
-    $UNCLEAN_qty = $_POST['qty'];
-
-    $subjectqty = stripslashes(trim($UNCLEAN_qty));
-    if (preg_match ('%^[A-za-z0-9\.\' \-!_&@.$~]{1,30}$%', $subjectqty)) {
-        $qty = escape_data('../',$subjectqty);
-    } else {
-        error_log("failed regex:".$_SESSION['user']."-".get_client_ip_env(), 0);
-        $passedRegex = FALSE;
-        header("Location: ../view/vendor/team.php?message=char7");
-        exit();
-    }
-    
-    $teamUidString = "";
-    for ($i = 1; $i <= $qty; $i++) {
-        if(isset($_POST['radio'.$i])){
-            $option = $_POST['radio'.$i];
-            $subjectAccessUID = stripslashes(trim($option));
-            if (preg_match ('%^[A-za-z0-9\.\' \-!_&@.$~]{0,30}$%', $subjectAccessUID)) {
-                $accessUID = escape_data('../',$subjectAccessUID);
-            } else {
-                error_log("failed regex:".$_SESSION['user']."-".get_client_ip_env(), 0);
-                $passedRegex = FALSE;
-                header("Location: ../view/vendor/team.php?message=char7");
-                exit();
-            }
-            $teamUidString .= $accessUID.";";
-        }
-    }
-    //remove trailing ";"
-    $teamUidString = substr($teamUidString, 0, -1);
-
-
     /* 
      * Only if the details pass the reggular expressions, $passedRegex remains TRUE and the connection to the DB is run,
      * the sanitised info is then sent to the SQL server
      */
-
+    
    if($passedRegex){
         /*
          * We run a query to see if the username is already registered in the DB
@@ -158,7 +110,7 @@
         $arr[] = "";
         // select_sqliLog_max1_Rnum returns a sql result object and num of rows affected from the query
         // userUsernameView is a view of users that only shows username
-        $arr = select_sqliLog_max1_Rnum('../',"SELECT username FROM userUsernameView WHERE username = '$username' LIMIT 1",1);   
+        $arr = select_sqliLog_max1_Rnum('../',"SELECT username FROM customers WHERE username = '$username' LIMIT 1",1);   
         
         /*
          * mysqli_query() was chosen over the other connection functions as it only allows one query to be sent to the DB
@@ -167,6 +119,8 @@
 
         $result =  $arr[0];
         $numRows = $arr[1];
+        //$result = mysql_query($query); 
+        //$numRows = mysql_num_rows($result);
         
         //variable to mark if the username is free or not
         $UserNameFree = true;
@@ -187,24 +141,25 @@
             //closed the sql connection
             mysql_close($connection);
             //redirects user index
-            header("Location: ../view/vendor/team.php?message=errorn");
+            header("Location: ../view/userRegister.php?message=error");
             
-        }//else{
+        }else{
             
             /*
              * else 1 or 0 rows are effected is the expected result so we check if the user name matches any existing usernames
              */
-             
-        //     $dbUsername = "";
-        //     while ($row = mysqli_fetch_assoc($result)) {
-        //         $dbUsername=$row['username'];
-        //         //if there is a match we redirect to newUser with userE in the url, we can then read that and display the correct error for the user
-        //         if($username == $dbUsername){
-        //             //we mark the username as not free
-        //             $UserNameFree = false;
-        //         }
-        //     }
-        // } 
+            $dbUsername = "";
+            while ($row = mysqli_fetch_assoc($result)) {
+                $dbUsername=$row['username'];
+                //if there is a match we redirect to newUser with userE in the url, we can then read that and display the correct error for the user
+                if($username == $dbUsername){
+                    //we mark the username as not free
+                    $UserNameFree = false;
+                    header("Location: ../view/userRegister.php?message=username");
+                    exit();
+                }
+            }
+        } 
            
         /*
          * --If the username is free--
@@ -214,9 +169,8 @@
          * and redirect the user to the new profile
          */
         
-        // if($UserNameFree){
-        //     header("Location: ../view/vendor/team.php?message=error");
-        // }else{
+        if($UserNameFree){
+            
             /*
              * password_hash() was picked over MD5 as its outdated and unsecure and SHA1 as it dosnt provide the cost functinality that password_hash() does which will defend against brute force attacks
              * password_hash() returns the algorithm, cost and salt as part of the returned hash. Therefore, 
@@ -224,56 +178,35 @@
              * This allows the verify function to verify the hash without needing separate storage for the salt or algorithm information.
              * password_hash() also allows us to use Blowfish encryption
              */
-             if($changingPassword){
-                 // delete user
-                 if(delete_prepared_removeUser("../",$uid)){
-                     echo "deleted";
-                 }else{
-                     echo "not deleted";
-                 }
-                
-                // brings in pepper which is a defined variable outside the web root
-                include("../../pem/pepper.php");
-                // salt generated
-                $salt = bin2hex(random_bytes(25));
-                // adds peper and salt to the password
-                $password_withSaltAndPepper = pepper.$password.$salt;
-                 
-                $userpasswordhashed = password_hash($password_withSaltAndPepper , CRYPT_BLOWFISH,['cost' => 8]);
-                $company = $_SESSION['company'];
-                //we then log the user details to the DB
-                insert_prepared_companyaddUser("../",$username,$userpasswordhashed,$email,$salt,$company, $teamUidString, 1);
-                //insert_sqli('../',"INSERT INTO users (username, password, email, salt, company) VALUES ('$username','$userpasswordhashed','$email','$salt','$company'");
-                echo "new user created";
-                //user then directed to their new profile
-                header("Location: ../view/vendor/team.php?message=updated");
-            }else{
-                echo "not changing password";
-                $company = $_SESSION['company'];
-                //update_prepared_updateUserDetails($dir, $uid, $username, $email, $company, $teamUidString, $expectedResult) {
-                // update_prepared_updateUserDetails("../", 49, "mareERkh", "mark", "asd", "1", 1) ;
-                if(update_prepared_updateUserDetails("../", $uid, $username,$email,$company, $teamUidString, 1)){
-                    header("Location: ../view/vendor/team.php?message=updated");
-                }else{
-                    //header("Location: ../view/vendor/team.php?message=error1");
-                }
-            }
+            
+            // brings in pepper which is a defined variable outside the web root
+            include("../../pem/pepper.php");
+            // salt generated
+            $salt = bin2hex(random_bytes(25));
+            // adds peper and salt to the password
+            $password_withSaltAndPepper = pepper.$password.$salt;
+             
+            $userpasswordhashed = password_hash($password_withSaltAndPepper , CRYPT_BLOWFISH,['cost' => 8]);
+            
+            $company = $_SESSION['company'];
+            
+            //we then log the user details to the DB
+            insert_sqli('../',"INSERT INTO customers (username, password, email, salt, company) VALUES ('$username','$userpasswordhashed','$email','$salt', '$company')");
+        
+            header("Location: ../view/vendor/customers.php?message=cusadd");
         }
-//   }else{
+   }else{
     
-//         /*
-//          * the regex on the clientside in JavaScript is the same as the regex on the serverside in PHP
-//          * if user input fails the regex on the server side it would mean the regex on the client side may have been altered to allow other charicters through
-//          * this may be a dilberate move by a attacker to introduce potentialy harmful charicters, scripts or querys to the server side
-//          * if if $passedRegex is false we do not open a connection to the DB
-//          * we run log.php which records user input, the server and client data and notifies info.pixly
-//          * we then redirect the user to index.php
-//          */
+        /*
+         * the regex on the clientside in JavaScript is the same as the regex on the serverside in PHP
+         * if user input fails the regex on the server side it would mean the regex on the client side may have been altered to allow other charicters through
+         * this may be a dilberate move by a attacker to introduce potentialy harmful charicters, scripts or querys to the server side
+         * if if $passedRegex is false we do not open a connection to the DB
+         * we run log.php which records user input, the server and client data and notifies info.pixly
+         * we then redirect the user to index.php
+         */
      
-//         header("Location: ../view/vendor/team.php?message=errorend");
-//     }   
+        header("Location: ../view/userRegister.php?message=char");
+    }   
             
 ?>
-
-
-

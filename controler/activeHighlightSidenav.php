@@ -14,6 +14,7 @@
     $customersActive = "";
     $teamsActive = "";
     $reposrtsActive = "";
+    $reposrtsProfile = "";
     
     if (strpos($escaped_url, 'dashboard') !== false) {
         $dashboardActive = 'active';
@@ -35,5 +36,8 @@
     }
     if (strpos($escaped_url, 'reports') !== false) {
         $reposrtsActive = 'active';
+    }
+    if (strpos($escaped_url, 'profile') !== false) {
+        $reposrtsProfile = 'active';
     }
 ?>

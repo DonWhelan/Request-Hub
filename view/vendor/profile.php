@@ -1,6 +1,6 @@
 <?php 
     include("navHead.php"); 
-    include("../../model/selectModel_inboxShowRequests.php");
+    include("../../model/selectModel_profile.php");
     include("../../controler/inboxGetTeam.php"); 
 ?>
 
@@ -12,41 +12,36 @@
             <div class="col-md-12">
                 <div class="card p-30">
                     <div class="media">
+    
                         <div class="media-left meida media-middle">
-                            <span><i class="fa fa-bars f-s-40 color-primary"></i></span>
+                            <span><i class="fa fa-user f-s-40 color-primary"></i></span>
                         </div>
                         <div class="media-body media-text-right">
-                            <h2><?php echo $teamName; //from:controler/inboxGetTeam.php?></h2>
+                            
+                            <h2><?php echo $_SESSION['user']; //from:controler/inboxGetTeam.php?></h2>
                         </div>
     
                     </div>
                     <br><br>
+                    <div>
                     <table class="table">
                     <thead>
                         <tr>
-                          <th scope="col">Rid</th>
-                          <th scope="col">Request</th>
-                          <th scope="col">Submitter</th>
-                          <th scope="col">Company</th>
+                          <th scope="col"><h4><b>Rid</b></h4></th>
+                          <th scope="col"><h4><b>Request</b></h4></th>
+                          <th scope="col"><h4><b>Time</b></h4></th>
+                          <th scope="col"><h4><b>Status</b></h4></th>
                           <th scope="col"></th>
                         </tr>
                     </thead>
                     <tbody>
                         <?php
-                            $infoForm = select_prepared_inboxGetRequestsFromRid("../../",$_SESSION['company'],$teamName,$rid,$qid)
+                            select_prepared_profileShowRequests("../../",$_SESSION['company'],$_SESSION['user'])
                         ?>
                     </tbody>
+                    </table>
+                    </div>
                 </div>
-            </div>
-        </div>
-        <div class="row">
-            <div class="col-md-12">
-                <?php 
-                    $text = str_ireplace(array("\r","\n",'\r','\n'),'<br>', $infoForm);
-                    echo  "<h3>Form Information</h3><hr>".$text."<br><br><hr>";
-                    $task = select_prepared_inboxGetCurrentActivity("../../",$rid);
-                    echo  "<h3>Task</h3><hr><br>".$task."<br><br><hr>";
-                ?>
             </div>
         </div>
     </div>

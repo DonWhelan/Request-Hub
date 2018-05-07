@@ -1,6 +1,6 @@
 <?php
 
-    function update_prepared_updateUserDetails($dir, $uid, $username, $email, $company, $teamUidString, $expectedResult) {
+    function update_prepared_updateCustomerDetails($dir, $uid, $username, $email, $company, $expectedResult) {
         // connection details are stored outside the web directory and are defined
         include($dir."../pem/sqlUpdate.php");
         $connection = mysqli_connect(uHOST, uUSER, uPASS);
@@ -20,14 +20,12 @@
             die("Connection failed: " . $connection->connect_error);
         }
         // "UPDATE users SET company = ?  WHERE username = ?
-        $stmt = $connection->prepare("UPDATE users SET username = ?, email = ?, teams = ? WHERE uid = ? AND company = ?");
-        $stmt->bind_param("sssis", $username, $email, $teamUidString, $uid, $company);
+        $stmt = $connection->prepare("UPDATE customers SET username = ?, email = ? WHERE uid = ? AND company = ?");
+        $stmt->bind_param("ssss", $username, $email, $uid, $company);
         if(!$stmt->execute()){
             error_log("Could not reach database! update_prepared_updateTeam(),", 0);
         }
-        printf("Error: %s.\n", $stmt->error);
         $affectedRows = mysqli_stmt_affected_rows($stmt);
-        echo "ar: ".$affectedRows." - er: ".$expectedResult;
         // check expected result
         if($affectedRows != $expectedResult){
             error_log("Unexpected DB result! update_prepared_updateTeam(),", 0);
@@ -35,9 +33,8 @@
         }else{
             return true;
         }
-       
     }
     
-    //update_prepared_updateUserDetails("../", 49, "mareERkh", "mark", "asd", "1", 1) ;
+    update_prepared_updateCustomerDetails("../", 7, "test", "test@test", "Don.inc", 1) ;
 
 ?>

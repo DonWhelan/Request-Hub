@@ -11,6 +11,7 @@ include("../../model/selectModel_dashboard.php");
               Requests Per Queue
             </div>
           </div>
+          Customer login URL: <a href="https://www.request-hub.com/view/vendor/<?php echo $_SESSION['company']; ?>/login.php">https://www.request-hub.com/view/vendor/<?php echo $_SESSION['company']; ?>/login.php</a>
           <canvas class="my-4" id="myChart" width="900" height="380"></canvas>
         </main>
       </div>

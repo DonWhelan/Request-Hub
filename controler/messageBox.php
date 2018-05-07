@@ -50,6 +50,11 @@
         User Updated <span><i class='fa fa-poo f-s-15'></i></span>
          </div>";
         }
+        if($_GET["message"]=="cusadd"){
+        echo " <div class='alert alert-success text-center'>
+        Customer Added <span><i class='fa fa-poo f-s-15'></i></span>
+         </div>";
+        }
         
     }
 ?>
