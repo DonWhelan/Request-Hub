@@ -20,13 +20,13 @@
         $dashboardActive = 'active';
     }
     if (strpos($escaped_url, 'inbox') !== false) {
-        $inboxActive = 'active';
+            $inboxActive = 'active';
     }
     if (strpos($escaped_url, 'request') !== false) {
-        $requestsActive = 'active';
+       $requestsActive = 'active';
     }
     if (strpos($escaped_url, 'Request') !== false) {
-        $requestsActive = 'active';
+        //$requestsActive = 'active';
     }
     if (strpos($escaped_url, 'create-edit') !== false) {
         $cAndEActive = 'active';

@@ -28,8 +28,7 @@
     
     // 2 - Checks that 'file' and 'returnedFile' has been passed via $_GET
     if(empty($_GET['file']) && empty($_GET['returnedFile'])) {
-      //header("HTTP/1.0 404 Not Found");
-      echo '2 - Checks that file and returnedFile has been passed via $_GET';
+      header("HTTP/1.0 404 Not Found");
       return;
     }
     
@@ -39,15 +38,13 @@
      
     if(!empty($_GET['file'])){
         //  Checks that file exists 
-        if(!file_exists("../../images/download/{$_GET['file']}")){
-            //header("HTTP/1.0 404 Not Found");
-            echo 'Checks that file exists ';
+        if(!file_exists("../images/download/{$_GET['file']}")){
+            header("HTTP/1.0 404 Not Found");
             exit;
         }
         // 3 - Handels '../' to mitigate directory traversal - produces 404
         if (strpos($_GET['file'], '../') !== false) {
-            //header("HTTP/1.0 404 Not Found");
-            echo 'Handels ../ to mitigate directory traversal';
+            header("HTTP/1.0 404 Not Found");
         }else{
             $fileName = basename($_GET['file']);
             // 4 - Adds the path type to the 'file'
@@ -69,8 +66,7 @@
     
     if(!empty($_GET['returnedFile'])){
         if (strpos($_GET['returnedFile'], '../') !== false) {
-           // header("HTTP/1.0 404 Not Found");
-           echo 'Handels ../ to mitigate directory traversal';
+            header("HTTP/1.0 404 Not Found");
         }else{
             // 7 - Checks for invalid charicters in the file name
             $fileName = basename($_GET['returnedFile']);

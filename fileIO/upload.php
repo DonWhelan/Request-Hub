@@ -29,7 +29,7 @@
      * ---------------------------------------------------------------------------------------------------------------------
      */
     $url = $_GET['url'];
-    $debug = false;
+    $debug = true;
     require_once('../model/connectionStrings.php');
     include('../includes/virustotal.class.php');
     include('../includes/virustotalFunctions.php');
@@ -52,7 +52,7 @@
         print_r($_FILES['uploaded_file']);}
 
         // 4 - check file size
-        if ($_FILES['uploaded_file']['size'] > 400000){
+        if ($_FILES['uploaded_file']['size'] > 2000000){
             if($debug){echo "file too large";}
             // handel error
         }else{

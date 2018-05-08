@@ -39,6 +39,21 @@
                 </div>
                 
                 <div class="row">
+                    <div class="col-md-5">
+                        <a href="requestScan.php">
+                        <div class="card p-30">
+                            <div class="media">
+                                <div class="media-left meida media-middle">
+                                    <span><i class="fa fa-shield-alt f-s-40 color-danger"></i></span>
+                                </div>
+                                <div class="media-body media-text-right">
+                                    <h2>Data Loss</h2>
+                                    <p class="m-b-0">Scan recovered data</p>
+                                </div>
+                            </div>
+                        </div>
+                        </a>
+                    </div>
                     <div id="messageBox" class="col-md-10" style="height:50px">
                         <?php include("../../controler/messageBox.php"); ?>
                     </div>

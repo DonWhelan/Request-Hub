@@ -43,10 +43,10 @@
             <div class="col-md-12">
                 <?php 
                     $text = str_ireplace(array("\r","\n",'\r','\n'),'<br>', $infoForm);
-                    echo  "<h3>Form Information</h3><hr>".$text."<br><br><hr>";
                     $task = select_prepared_inboxGetCurrentActivity("../../",$rid);
-                    echo  "<h3>Task</h3><hr><br>".$task."<br><br><hr>";
                 ?>
+                <h3>Form Information</h3><hr><?php echo $text ?><br><br><hr>
+                <h3>Task</h3><hr><br><?php echo $task ?><br><br><hr>
             </div>
         </div>
     </div>
